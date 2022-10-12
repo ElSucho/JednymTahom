@@ -5,6 +5,7 @@ using System.IO;
 using Assets.Scripts;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class GridManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GridManager : MonoBehaviour
 
     public Transform _cam;
 
-    private List<string> mapa;
+    private List<List<char>> mapa;
 
     private Dictionary<Vector2, Tile> _tiles;
 
@@ -39,7 +40,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
         Tile.OnSelectedEvent += SelectAction;
-        mapa = new List<string>();
+        mapa = new List<List<char>>();
         kroky = new Stack<Pair>();
 
         Button bckBtn = backButton.GetComponent<Button>();
@@ -60,12 +61,15 @@ public class GridManager : MonoBehaviour
                 if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1')){
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
+                    mapa[_height - actualY - 1][actualX] = '1';
 
                     var oldTile = actualTile;
 
                     actualTile = GetTileAtPosition(new Vector2(actualX + 1, actualY));
                     actualTile._znak = 'z';
                     actualTile._Player.SetActive(true);
+                    
+
 
                     var line = CreateLine(1, 0);
 
@@ -89,6 +93,7 @@ public class GridManager : MonoBehaviour
 
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
+                    mapa[_height - actualY - 1][actualX] = '1'; 
 
                     var oldTile = actualTile;
 
@@ -120,6 +125,7 @@ public class GridManager : MonoBehaviour
 
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
+                    mapa[_height - actualY - 1][actualX] = '1';
 
                     var oldTile = actualTile;
 
@@ -136,6 +142,7 @@ public class GridManager : MonoBehaviour
                     {
                         win.SetActive(true);
                     }
+                    Save();
                 }
             }
         }
@@ -148,6 +155,7 @@ public class GridManager : MonoBehaviour
                 {
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
+                    mapa[_height - actualY - 1][actualX] = '1';
 
                     var oldTile = actualTile;
 
@@ -177,12 +185,23 @@ public class GridManager : MonoBehaviour
 
         var file = (TextAsset)Resources.Load("map1");
         string[] strings = file.ToString().Split('\n');
-        foreach (string s in strings) {
-            mapa.Add(s.Replace("/r", ""));
+        int i = 0;
+        int j = 0;
+        foreach (string s in strings)
+        {
+            j = 0;
+            mapa.Add(new List<char>());
+            var str = s.Substring(0, s.Length - 2);
+            foreach (char ch in str)
+            {
+                mapa[i].Add(ch);
+                j += 1;
+            }
+            i += 1;
+            
         }
-
-        _width = mapa[1].Length - 1;
-        _height = mapa.Count;
+        _width = j;
+        _height = i;
     }
 
     void VytvorGrid() {
@@ -273,5 +292,21 @@ public class GridManager : MonoBehaviour
     public void showHint() {
         SceneManager.LoadScene("Hint");
 
+    }
+
+    public void Save() {
+        string temporaryTextFileName = "Save1";
+        var str = "";
+        foreach (var i in mapa) {
+            
+            foreach (var ch in i) {
+                str += ch;
+            }
+            str += "\n";
+        }
+
+        File.WriteAllText(Application.dataPath + "/Resources/" + temporaryTextFileName + ".txt", str);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 }
