@@ -17,6 +17,8 @@ public class MenuManager : MonoBehaviour
     public Button ukonciHruButton;
     public GridManager gd;
     public GameObject menu;
+    public InputField input;
+    public GameObject saveName;
 
 
     // Start is called before the first frame update
@@ -26,7 +28,7 @@ public class MenuManager : MonoBehaviour
         novaHraB.onClick.AddListener(NewGame);
 
         Button ulozHruB = ulozHruButton.GetComponent<Button>();
-        ulozHruB.onClick.AddListener(Napoveda);
+        ulozHruB.onClick.AddListener(Save);
 
         Button nacitajHruB = nacitajHruButton.GetComponent<Button>();
         nacitajHruB.onClick.AddListener(Napoveda);
@@ -35,10 +37,12 @@ public class MenuManager : MonoBehaviour
         napovedaB.onClick.AddListener(Napoveda);
 
         Button editorLevelovB = editorLevelovButton.GetComponent<Button>();
-        editorLevelovB.onClick.AddListener(Napoveda);
+        editorLevelovB.onClick.AddListener(Continue);
 
         Button ukonciHruB = ukonciHruButton.GetComponent<Button>();
         ukonciHruB.onClick.AddListener(Napoveda);
+
+        input.onSubmit.AddListener(saveGame);
 
 
     }
@@ -54,9 +58,21 @@ public class MenuManager : MonoBehaviour
         gd.NewGame();
     }
 
+    public void Continue() {
+        menu.SetActive(false);
+    }
+
+    public void Save() {
+        saveName.SetActive(true);
+    }
+
+    public void saveGame(string text) {
+        saveName.SetActive(false);
+        gd.Save(text);
+    }
+
     // Update is called once per frame
     void Update()
     {
-
     }
 }

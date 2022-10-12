@@ -31,16 +31,24 @@ public class GridManager : MonoBehaviour
 
     public Button backButton;
 
-    public Button hint;
+    public Button menuButton;
 
     public GameObject menu;
+
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Tile.OnSelectedEvent += SelectAction;
+        mapa = new List<List<char>>();
+        kroky = new Stack<Pair>();
+
+        Button bckBtn = backButton.GetComponent<Button>();
+        bckBtn.onClick.AddListener(back);
+        Button menuBtn = menuButton.GetComponent<Button>();
+        menuBtn.onClick.AddListener(showMenu);
     }
 
     // Update is called once per frame
@@ -133,7 +141,6 @@ public class GridManager : MonoBehaviour
                     {
                         win.SetActive(true);
                     }
-                    Save();
                 }
             }
         }
@@ -169,6 +176,12 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) {
             back();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            
+            menu.SetActive(true);
         }
     }
 
@@ -280,13 +293,11 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void showHint() {
-        SceneManager.LoadScene("Hint");
-
+    public void showMenu() {
+        menu.gameObject.SetActive(true);
     }
 
-    public void Save() {
-        string temporaryTextFileName = "Save1";
+    public void Save(string name) {
         var str = "";
         foreach (var i in mapa) {
             
@@ -296,22 +307,13 @@ public class GridManager : MonoBehaviour
             str += "\n";
         }
 
-        File.WriteAllText(Application.dataPath + "/Resources/" + temporaryTextFileName + ".txt", str);
+        File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
 
     public void NewGame()
     {
-       // menu.SetActive(false);
-        Tile.OnSelectedEvent += SelectAction;
-        mapa = new List<List<char>>();
-        kroky = new Stack<Pair>();
-
-        Button bckBtn = backButton.GetComponent<Button>();
-        bckBtn.onClick.AddListener(back);
-        Button hintBtn = hint.GetComponent<Button>();
-        hintBtn.onClick.AddListener(showHint);
 
         NacitajLevel(2);
         VytvorGrid();
