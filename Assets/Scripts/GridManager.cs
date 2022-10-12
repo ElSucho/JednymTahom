@@ -11,6 +11,8 @@ public class GridManager : MonoBehaviour
 {
     public int _width, _height;
 
+    public GameObject menu;
+
     public Tile _prefab;
 
     public GameObject win;
@@ -39,6 +41,8 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        menu.gameObject.SetActive(false);
         Tile.OnSelectedEvent += SelectAction;
         mapa = new List<List<char>>();
         kroky = new Stack<Pair>();
