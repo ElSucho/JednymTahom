@@ -33,23 +33,14 @@ public class GridManager : MonoBehaviour
 
     public Button hint;
 
+    public GameObject menu;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Tile.OnSelectedEvent += SelectAction;
-        mapa = new List<List<char>>();
-        kroky = new Stack<Pair>();
-
-        Button bckBtn = backButton.GetComponent<Button>();
-        bckBtn.onClick.AddListener(back);
-        Button hintBtn = hint.GetComponent<Button>();
-        hintBtn.onClick.AddListener(showHint);
-
-        NacitajLevel(2);
-        VytvorGrid();
+        
     }
 
     // Update is called once per frame
@@ -308,5 +299,21 @@ public class GridManager : MonoBehaviour
         File.WriteAllText(Application.dataPath + "/Resources/" + temporaryTextFileName + ".txt", str);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+    }
+
+    public void NewGame()
+    {
+       // menu.SetActive(false);
+        Tile.OnSelectedEvent += SelectAction;
+        mapa = new List<List<char>>();
+        kroky = new Stack<Pair>();
+
+        Button bckBtn = backButton.GetComponent<Button>();
+        bckBtn.onClick.AddListener(back);
+        Button hintBtn = hint.GetComponent<Button>();
+        hintBtn.onClick.AddListener(showHint);
+
+        NacitajLevel(2);
+        VytvorGrid();
     }
 }
