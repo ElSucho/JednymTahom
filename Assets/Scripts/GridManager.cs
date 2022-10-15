@@ -56,8 +56,10 @@ public class GridManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (actualX + 1 < _width) {
-                if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1')){
+            if (actualX + 1 < _width)
+            {
+                if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1'))
+                {
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
                     mapa[_height - actualY - 1][actualX] = '1';
@@ -67,7 +69,7 @@ public class GridManager : MonoBehaviour
                     actualTile = GetTileAtPosition(new Vector2(actualX + 1, actualY));
                     actualTile._znak = 'z';
                     actualTile._Player.SetActive(true);
-                    
+
 
 
                     var line = CreateLine(1, 0);
@@ -76,7 +78,8 @@ public class GridManager : MonoBehaviour
 
                     actualX += 1;
 
-                    if (Check()) {
+                    if (Check())
+                    {
                         win.SetActive(true);
                     }
                 }
@@ -88,11 +91,12 @@ public class GridManager : MonoBehaviour
 
             if (actualY - 1 >= 0)
             {
-                if ((GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != '1')) { 
+                if ((GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != '1'))
+                {
 
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
-                    mapa[_height - actualY - 1][actualX] = '1'; 
+                    mapa[_height - actualY - 1][actualX] = '1';
 
                     var oldTile = actualTile;
 
@@ -149,7 +153,7 @@ public class GridManager : MonoBehaviour
         {
             if (actualX - 1 >= 0)
             {
-                if (( GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak  != 's') & (GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != '1'))
+                if ((GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != '1'))
                 {
                     actualTile._znak = '1';
                     actualTile._Player.SetActive(false);
@@ -174,18 +178,20 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             back();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            
+
             menu.SetActive(true);
         }
     }
 
-    void NacitajLevel(int lvl) {
+    void NacitajLevel(int lvl)
+    {
 
         var file = (TextAsset)Resources.Load("map1");
         string[] strings = file.ToString().Split('\n');
@@ -202,22 +208,26 @@ public class GridManager : MonoBehaviour
                 j += 1;
             }
             i += 1;
-            
+
         }
         _width = j;
         _height = i;
     }
 
-    void VytvorGrid() {
+    void VytvorGrid()
+    {
         _tiles = new Dictionary<Vector2, Tile>();
-        for (int x = 0; x < _width; x++) {
-            for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++)
+        {
+            for (int y = 0; y < _height; y++)
+            {
                 var tile = Instantiate(_prefab, new Vector3(x + 0.5F, y - 0.5F), Quaternion.identity);
                 tile.name = $"Tile {x} {y}";
 
                 var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-                    
-                if (mapa[_height - y - 1][x] == 'z'){
+
+                if (mapa[_height - y - 1][x] == 'z')
+                {
                     actualX = x;
                     actualY = y;
                     actualTile = tile;
@@ -235,16 +245,16 @@ public class GridManager : MonoBehaviour
 
     public Tile GetTileAtPosition(Vector2 pos)
     {
-        if (_tiles.TryGetValue(pos, out var tile)) 
+        if (_tiles.TryGetValue(pos, out var tile))
             return tile;
         return null;
     }
 
     void SelectAction(Tile target)
     {
-        
+
     }
-    LineRenderer CreateLine(int x, int y) 
+    LineRenderer CreateLine(int x, int y)
     {
         var Line = Instantiate(LineRenderer, new Vector3(0, 0, 1), Quaternion.identity);
 
@@ -277,7 +287,8 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public void back() {
+    public void back()
+    {
         if (kroky.Count > 0)
         {
             var pair = kroky.Pop();
@@ -293,20 +304,24 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void showMenu() {
+    public void showMenu()
+    {
         menu.gameObject.SetActive(true);
     }
 
-    public void Save(string name) {
+    public void Save(string name)
+    {
         var str = saveLine();
-        foreach (var i in mapa) {
-            
-            foreach (var ch in i) {
+        foreach (var i in mapa)
+        {
+
+            foreach (var ch in i)
+            {
                 str += ch;
             }
             str += "\n";
         }
-        
+
         File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -319,7 +334,8 @@ public class GridManager : MonoBehaviour
         VytvorGrid();
     }
 
-    private string saveLine() {
+    private string saveLine()
+    {
         string line = "S";
 
         foreach (Pair p in kroky)
@@ -327,10 +343,24 @@ public class GridManager : MonoBehaviour
             Vector3 v0 = p.getLine().GetPosition(0);
             Vector3 v1 = p.getLine().GetPosition(1);
 
-            line += v0.x.ToString() + "." + v0.y.ToString() + "." + v1.x.ToString() + "." + v1.y.ToString() + "|";
+            line += v0.x.ToString().Replace(',', '.') + "-" + v0.y.ToString().Replace(',', '.') + "-" + v1.x.ToString().Replace(',', '.') + "-" + v1.y.ToString().Replace(',', '.') + "|";
         }
         line = line.Remove(line.Length - 1);
         line += "\n";
         return line;
+    }
+
+
+    public void loadSave()
+    {
+        string name = dialogWindow();
+    }
+
+    private string dialogWindow()
+    {
+        var path = EditorUtility.OpenFilePanel("Vyber si level", Application.dataPath + "/Resources/", "CSV");
+        if (string.IsNullOrEmpty(path))
+            return path;
+        return path;
     }
 }

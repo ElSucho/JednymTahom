@@ -31,7 +31,7 @@ public class MenuManager : MonoBehaviour
         ulozHruB.onClick.AddListener(Save);
 
         Button nacitajHruB = nacitajHruButton.GetComponent<Button>();
-        nacitajHruB.onClick.AddListener(Napoveda);
+        nacitajHruB.onClick.AddListener(Load);
 
         Button napovedaB = napovedaButton.GetComponent<Button>();
         napovedaB.onClick.AddListener(Napoveda);
@@ -66,6 +66,9 @@ public class MenuManager : MonoBehaviour
         saveName.SetActive(true);
     }
 
+    public void Load() {
+        gd.loadSave();
+    }
     public void saveGame(string text) {
         saveName.SetActive(false);
         gd.Save(text);
