@@ -67,6 +67,7 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Load() {
+        menu.gameObject.SetActive(false);
         gd.loadSave();
     }
     public void saveGame(string text) {

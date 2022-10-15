@@ -6,6 +6,8 @@ using Assets.Scripts;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor;
+using System.Linq;
+using System;
 
 public class GridManager : MonoBehaviour
 {
@@ -36,6 +38,14 @@ public class GridManager : MonoBehaviour
     public Button continueButton;
 
     public GameObject menu;
+
+    private string levelName = "map1";
+
+    private List<Vector2> v0 = new List<Vector2>();
+
+    private List<Vector2> v1 = new List<Vector2>();
+
+    private List<Vector2> vT = new List<Vector2>();
 
 
 
@@ -194,23 +204,38 @@ public class GridManager : MonoBehaviour
 
     void NacitajLevel(string game)
     {
-
         var file = (TextAsset)Resources.Load(game);
         string[] strings = file.ToString().Split('\n');
+
+        if (strings[0][0] == 'S') {
+            var item = strings[0];
+            var saveLine = strings[0].Remove(0, 1).Split('|');
+            for (int k = saveLine.Length - 1; k > 0; k--)
+            {
+                var coordinations = saveLine[k].Split('-');
+                v0.Add(new Vector2(float.Parse(coordinations[0].Replace('.',',')), float.Parse(coordinations[1].Replace('.', ','))));
+                v1.Add(new Vector2(float.Parse(coordinations[2].Replace('.', ',')), float.Parse(coordinations[3].Replace('.', ','))));
+                vT.Add(new Vector2(float.Parse(coordinations[4].Replace('.', ',')), float.Parse(coordinations[5].Replace('.', ','))));
+            }
+            strings = Array.FindAll(strings, i => i != item).ToArray();
+        }
+
         int i = 0;
         int j = 0;
         foreach (string s in strings)
         {
-            j = 0;
-            mapa.Add(new List<char>());
-            var str = s.Replace("\n", "").Replace("\r", "");
-            foreach (char ch in str)
+            if (s != "")
             {
-                mapa[i].Add(ch);
-                j += 1;
+                j = 0;
+                mapa.Add(new List<char>());
+                var str = s.Replace("\n", "").Replace("\r", "");
+                foreach (char ch in str)
+                {
+                    mapa[i].Add(ch);
+                    j += 1;
+                }
+                i += 1;
             }
-            i += 1;
-
         }
         _width = j;
         _height = i;
@@ -239,9 +264,21 @@ public class GridManager : MonoBehaviour
 
                 _tiles[new Vector2(x, y)] = tile;
             }
+        
         }
+        if (v0.Count > 0) {
+            for (int l = 0; l < v0.Count - l; l++) {
+                actualX = (int)vT[l].x;
+                actualY = (int)vT[l].y;
+                actualTile = GetTileAtPosition(vT[l]);
+                CreateLine((int)(v1[l].x - v0[l].x), (int)(v1[l].y - v0[l].y));
+            }
+            v0.Clear();
+            v1.Clear();
+            vT.Clear();
 
-
+        }
+        actualTile._Player.SetActive(true);
         _cam.transform.position = new Vector3((float)_width / 2 - 0.5F, (float)_height / 2 - 0.5F, -10);
     }
 
@@ -332,7 +369,7 @@ public class GridManager : MonoBehaviour
     public void NewGame()
     {
 
-        NacitajLevel("map1");
+        NacitajLevel(levelName);
         VytvorGrid();
     }
 
@@ -344,8 +381,9 @@ public class GridManager : MonoBehaviour
         {
             Vector3 v0 = p.getLine().GetPosition(0);
             Vector3 v1 = p.getLine().GetPosition(1);
+            Tile t = p.getTile();
 
-            line += v0.x.ToString().Replace(',', '.') + "-" + v0.y.ToString().Replace(',', '.') + "-" + v1.x.ToString().Replace(',', '.') + "-" + v1.y.ToString().Replace(',', '.') + "|";
+            line += v0.x.ToString().Replace(',', '.') + "-" + v0.y.ToString().Replace(',', '.') + "-" + v1.x.ToString().Replace(',', '.') + "-" + v1.y.ToString().Replace(',', '.') + "-" + t._x.ToString().Replace(',', '.') + "-" + t._y.ToString().Replace(',', '.') + "|";
         }
         line = line.Remove(line.Length - 1);
         line += "\n";
@@ -357,8 +395,9 @@ public class GridManager : MonoBehaviour
     {
         string fileName = dialogWindow();
         var spl = fileName.Split('/');
-        name = spl[spl.Length - 1];
-
+        name = spl[spl.Length - 1].Split('.')[0];
+        NacitajLevel(name);
+        VytvorGrid();
 
     }
 
