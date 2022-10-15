@@ -33,6 +33,8 @@ public class GridManager : MonoBehaviour
 
     public Button menuButton;
 
+    public Button continueButton;
+
     public GameObject menu;
 
 
