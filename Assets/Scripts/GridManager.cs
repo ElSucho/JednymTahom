@@ -192,10 +192,10 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void NacitajLevel(int lvl)
+    void NacitajLevel(string game)
     {
 
-        var file = (TextAsset)Resources.Load("map1");
+        var file = (TextAsset)Resources.Load(game);
         string[] strings = file.ToString().Split('\n');
         int i = 0;
         int j = 0;
@@ -332,7 +332,7 @@ public class GridManager : MonoBehaviour
     public void NewGame()
     {
 
-        NacitajLevel(2);
+        NacitajLevel("map1");
         VytvorGrid();
     }
 
@@ -355,14 +355,18 @@ public class GridManager : MonoBehaviour
 
     public void loadSave()
     {
-        string name = dialogWindow();
+        string fileName = dialogWindow();
+        var spl = fileName.Split('/');
+        name = spl[spl.Length - 1];
+
+
     }
 
     private string dialogWindow()
     {
-        var path = EditorUtility.OpenFilePanel("Vyber si level", Application.dataPath + "/Resources/", "CSV");
+        var path = EditorUtility.OpenFilePanel("Vyber si level", Application.dataPath + "/Resources/", "txt");
         if (string.IsNullOrEmpty(path))
-            return path;
+            return "";
         return path;
     }
 }
