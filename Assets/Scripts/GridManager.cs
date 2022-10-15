@@ -195,7 +195,7 @@ public class GridManager : MonoBehaviour
         {
             j = 0;
             mapa.Add(new List<char>());
-            var str = s.Substring(0, s.Length - 2);
+            var str = s.Replace("\n", "").Replace("\r", "");
             foreach (char ch in str)
             {
                 mapa[i].Add(ch);
@@ -298,7 +298,7 @@ public class GridManager : MonoBehaviour
     }
 
     public void Save(string name) {
-        var str = "";
+        var str = saveLine();
         foreach (var i in mapa) {
             
             foreach (var ch in i) {
@@ -306,7 +306,7 @@ public class GridManager : MonoBehaviour
             }
             str += "\n";
         }
-
+        
         File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -317,5 +317,20 @@ public class GridManager : MonoBehaviour
 
         NacitajLevel(2);
         VytvorGrid();
+    }
+
+    private string saveLine() {
+        string line = "S";
+
+        foreach (Pair p in kroky)
+        {
+            Vector3 v0 = p.getLine().GetPosition(0);
+            Vector3 v1 = p.getLine().GetPosition(1);
+
+            line += v0.x.ToString() + "." + v0.y.ToString() + "." + v1.x.ToString() + "." + v1.y.ToString() + "|";
+        }
+        line = line.Remove(line.Length - 1);
+        line += "\n";
+        return line;
     }
 }
