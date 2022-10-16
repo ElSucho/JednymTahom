@@ -15,6 +15,7 @@ public class MenuManager : MonoBehaviour
     public Button napovedaButton;
     public Button editorLevelovButton;
     public Button ukonciHruButton;
+    public Button pokracujButton;
     public GridManager gd;
     public GameObject menu;
     public InputField input;
@@ -42,6 +43,9 @@ public class MenuManager : MonoBehaviour
         Button ukonciHruB = ukonciHruButton.GetComponent<Button>();
         ukonciHruB.onClick.AddListener(Napoveda);
 
+        Button pokracujB = pokracujButton.GetComponent<Button>();
+        pokracujB.onClick.AddListener(Continue);
+
         input.onSubmit.AddListener(saveGame);
 
 
@@ -54,8 +58,18 @@ public class MenuManager : MonoBehaviour
 
     public void NewGame()
     {
-        menu.gameObject.SetActive(false);
-        gd.NewGame();
+        if (!gd.saved)
+        {
+            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ hru?", "ZahoÔiù", "Zruöiù"))
+            {
+                menu.gameObject.SetActive(false);
+                gd.NewGame();
+            }
+        }
+        else {
+            menu.gameObject.SetActive(false);
+            gd.NewGame();
+        }
     }
 
     public void Continue() {
@@ -67,12 +81,26 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Load() {
-        menu.gameObject.SetActive(false);
-        gd.loadSave();
+        if (!gd.saved)
+        {
+            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ hru?", "ZahoÔiù", "Zruöiù"))
+            {
+                menu.gameObject.SetActive(false);
+                gd.loadSave();
+            }
+        }
+        else {
+            menu.gameObject.SetActive(false);
+            gd.loadSave();
+        }
     }
     public void saveGame(string text) {
         saveName.SetActive(false);
         gd.Save(text);
+    }
+
+    public void pokracuj() {
+        menu.SetActive(false);
     }
 
     // Update is called once per frame

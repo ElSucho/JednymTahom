@@ -636,6 +636,7 @@ MonoBehaviour:
   napovedaButton: {fileID: 2025096916}
   editorLevelovButton: {fileID: 2012378030}
   ukonciHruButton: {fileID: 1498809230}
+  pokracujButton: {fileID: 11271056}
   gd: {fileID: 953992393}
   menu: {fileID: 1326779495}
   input: {fileID: 1955434376}
@@ -1525,6 +1526,7 @@ MonoBehaviour:
   menuButton: {fileID: 1272365376}
   continueButton: {fileID: 11271056}
   menu: {fileID: 1326779495}
+  saved: 1
 --- !u!222 &953992395
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2543,7 +2545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1326779496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2960,7 +2962,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1620333686
 RectTransform:
   m_ObjectHideFlags: 0
