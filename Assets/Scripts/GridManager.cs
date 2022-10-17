@@ -25,6 +25,7 @@ public class GridManager : MonoBehaviour
     public Button menuButton;
     public Button continueButton;
     public Button next;
+    public Button previous;
     public GameObject menu;
     private int levelNumber = 1;
     private List<Vector2> v0 = new List<Vector2>();
@@ -34,6 +35,9 @@ public class GridManager : MonoBehaviour
     public GameObject hint;
     private string path;
     private int _serie;
+    public Text actualLevel;
+    public Text levelType;
+    private bool solve;
 
 
 
@@ -51,6 +55,8 @@ public class GridManager : MonoBehaviour
         menuBtn.onClick.AddListener(showMenu);
         Button nextBtn = next.GetComponent<Button>();
         nextBtn.onClick.AddListener(nextGame);
+        Button previousBtn = previous.GetComponent<Button>();
+        previousBtn.onClick.AddListener(previousGame);
 
         _tiles = new Dictionary<Vector2, Tile>();
     }
@@ -73,9 +79,22 @@ public class GridManager : MonoBehaviour
         saved = true;
     }
 
-    private void nextGame() {
-        NewGame(_serie, levelNumber += 1);
+    private void previousGame()
+    {
 
+        if (levelNumber -1 > 0)
+        {
+            NewGame(_serie, levelNumber -= 1);
+            
+        }
+    }
+
+    private void nextGame() {
+        
+        if (levelNumber + 1 < 4)
+        {
+            NewGame(_serie, levelNumber += 1);
+        }
     }
     
     void Update()
@@ -241,6 +260,28 @@ public class GridManager : MonoBehaviour
 
         int i = 0;
         int j = 0;
+
+        if (strings[strings.Length-1][0] == 'D')
+        {
+            if (strings[strings.Length - 1][1] == 'R')
+            {
+                solve = true;
+                if (strings[strings.Length - 1][2] == 'K')
+                {
+                    levelType.text = "Kružnica";
+                }
+                else
+                {
+                    levelType.text = "ah";
+                }
+            }
+            else
+            {
+                solve = false;
+            }
+        }
+        strings = strings.Skip(strings.Length - 1).ToArray();
+
         foreach (string s in strings)
         {
             if (s != "")
@@ -405,6 +446,7 @@ public class GridManager : MonoBehaviour
     public void NewGame(int serie, int level = 1)
     {
         levelNumber = level;
+        actualLevel.text = "Level: " + levelNumber.ToString() + "/3";
         _serie = serie;
         path = "Sada" + serie.ToString() + "/";
         if (actualTile != null)
