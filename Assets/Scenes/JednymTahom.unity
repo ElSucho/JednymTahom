@@ -2445,7 +2445,6 @@ MonoBehaviour:
   _width: 15
   _height: 6
   _prefab: {fileID: 5256557262835023808, guid: f192a8e7e6e85db4a89db887c1667701, type: 3}
-  win: {fileID: 1982600425}
   LineRenderer: {fileID: 1486555491431036512, guid: 72d910efd7c488341bd71fa7e1927b87, type: 3}
   _cam: {fileID: 1215413106}
   backButton: {fileID: 442639015}
@@ -2454,6 +2453,7 @@ MonoBehaviour:
   next: {fileID: 1619882582}
   previous: {fileID: 570909871}
   menu: {fileID: 1326779495}
+  endMenu: {fileID: 1620333685}
   saved: 1
   hint: {fileID: 56748679}
   actualLevel: {fileID: 869961976}

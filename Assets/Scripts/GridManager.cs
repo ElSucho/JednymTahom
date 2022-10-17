@@ -13,7 +13,6 @@ public class GridManager : MonoBehaviour
 {
     public int _width, _height;
     public Tile _prefab;
-    public GameObject win;
     public LineRenderer LineRenderer;
     public Transform _cam;
     public List<List<char>> mapa;
@@ -25,8 +24,11 @@ public class GridManager : MonoBehaviour
     public Button menuButton;
     public Button continueButton;
     public Button next;
+    public Button odznova;
+    public Button endNext;
     public Button previous;
     public GameObject menu;
+    public GameObject endMenu;
     private int levelNumber = 1;
     private List<Vector2> v0 = new List<Vector2>();
     private List<Vector2> v1 = new List<Vector2>();
@@ -57,6 +59,11 @@ public class GridManager : MonoBehaviour
         nextBtn.onClick.AddListener(nextGame);
         Button previousBtn = previous.GetComponent<Button>();
         previousBtn.onClick.AddListener(previousGame);
+
+        Button odznovaBtn = odznova.GetComponent<Button>();
+        odznovaBtn.onClick.AddListener(()=>NewGame(_serie, levelNumber));
+        Button endNextBtn = endNext.GetComponent<Button>();
+        endNextBtn.onClick.AddListener(nextGame);
 
         _tiles = new Dictionary<Vector2, Tile>();
     }
@@ -126,7 +133,7 @@ public class GridManager : MonoBehaviour
                     saved = false;
                     if (Check())
                     {
-                        win.SetActive(true);
+                        endMenu.SetActive(true);
                     }
                 }
             }
@@ -158,7 +165,7 @@ public class GridManager : MonoBehaviour
                     saved = false;
                     if (Check())
                     {
-                        win.SetActive(true);
+                        endMenu.SetActive(true);
                     }
                 }
             }
@@ -191,7 +198,7 @@ public class GridManager : MonoBehaviour
                     saved = false;
                     if (Check())
                     {
-                        win.SetActive(true);
+                        endMenu.SetActive(true);
                     }
                 }
             }
@@ -221,7 +228,7 @@ public class GridManager : MonoBehaviour
                     saved = false;
                     if (Check())
                     {
-                        win.SetActive(true);
+                        endMenu.SetActive(true);
                     }
                 }
             }
@@ -280,7 +287,8 @@ public class GridManager : MonoBehaviour
                 solve = false;
             }
         }
-        strings = strings.Skip(strings.Length - 1).ToArray();
+
+        strings = strings.Take(strings.Length - 1).ToArray();
 
         foreach (string s in strings)
         {
