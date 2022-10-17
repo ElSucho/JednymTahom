@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
     public GameObject win;
     public LineRenderer LineRenderer;
     public Transform _cam;
-    private List<List<char>> mapa;
+    public List<List<char>> mapa;
     private Dictionary<Vector2, Tile> _tiles;
     private int actualX, actualY;
     private Tile actualTile;
@@ -24,12 +24,16 @@ public class GridManager : MonoBehaviour
     public Button backButton;
     public Button menuButton;
     public Button continueButton;
+    public Button next;
     public GameObject menu;
-    private string levelName = "map1";
+    private int levelNumber = 1;
     private List<Vector2> v0 = new List<Vector2>();
     private List<Vector2> v1 = new List<Vector2>();
     private List<Vector2> vT = new List<Vector2>();
     public bool saved = true;
+    public GameObject hint;
+    private string path;
+    private int _serie;
 
 
 
@@ -45,18 +49,33 @@ public class GridManager : MonoBehaviour
         bckBtn.onClick.AddListener(back);
         Button menuBtn = menuButton.GetComponent<Button>();
         menuBtn.onClick.AddListener(showMenu);
+        Button nextBtn = next.GetComponent<Button>();
+        nextBtn.onClick.AddListener(nextGame);
+
+        _tiles = new Dictionary<Vector2, Tile>();
     }
 
     // Update is called once per frame
 
     private void clear() {
+        foreach (Tile t in _tiles.Values) {
+            Destroy(t._Player);
+            Destroy(t._Tree);
+            Destroy(t._renderer);
+
+        }
+        _tiles.Clear();
         mapa.Clear();
         foreach (var krok in kroky) {
-            Destroy(krok.getTile());
             Destroy(krok.getLine());
         }
         kroky.Clear();
         saved = true;
+    }
+
+    private void nextGame() {
+        NewGame(_serie, levelNumber += 1);
+
     }
     
     void Update()
@@ -201,9 +220,10 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void NacitajLevel(string game)
+    void NacitajLevel()
     {
-        var file = (TextAsset)Resources.Load(game);
+        
+        var file = (TextAsset)Resources.Load(path + "map" + levelNumber.ToString());
         string[] strings = file.ToString().Split('\n');
 
         if (strings[0][0] == 'S') {
@@ -242,7 +262,6 @@ public class GridManager : MonoBehaviour
 
     void VytvorGrid()
     {
-        _tiles = new Dictionary<Vector2, Tile>();
         for (int x = 0; x < _width; x++)
         {
             for (int y = 0; y < _height; y++)
@@ -259,7 +278,7 @@ public class GridManager : MonoBehaviour
                     actualTile = tile;
                 }
 
-                tile.Init(isOffset, x, y, mapa[_height - y - 1][x]);
+                tile.Init(isOffset, x, y, mapa[_height - y - 1][x], _serie);
 
                 _tiles[new Vector2(x, y)] = tile;
             }
@@ -300,8 +319,10 @@ public class GridManager : MonoBehaviour
     {
         var Line = Instantiate(LineRenderer, new Vector3(0, 0, 1), Quaternion.identity);
 
-        Line.startColor = Color.red;
-        Line.endColor = Color.red;
+        Color c1 = Color.white;
+
+        Line.material = new Material(Shader.Find("Sprites/Default"));
+        Line.SetColors(c1, c1);
 
         // set width of the renderer
         Line.startWidth = 0.1f;
@@ -353,7 +374,11 @@ public class GridManager : MonoBehaviour
 
     public void showMenu()
     {
-        continueButton.gameObject.SetActive(true);
+        hint.SetActive(false);
+        if (mapa.Count != 0)
+        {
+            continueButton.gameObject.SetActive(true);
+        }
         menu.gameObject.SetActive(true);
     }
 
@@ -377,14 +402,16 @@ public class GridManager : MonoBehaviour
         saved = true;
     }
 
-    public void NewGame(string level = "map1")
+    public void NewGame(int serie, int level = 1)
     {
+        levelNumber = level;
+        _serie = serie;
+        path = "Sada" + serie.ToString() + "/";
         if (actualTile != null)
             actualTile._Player.gameObject.SetActive(false);
-        if (!saved)
-            clear();
+        clear();
         mapa.Clear();
-        NacitajLevel(level);
+        NacitajLevel();
         VytvorGrid();
     }
 
@@ -411,7 +438,7 @@ public class GridManager : MonoBehaviour
         string fileName = dialogWindow();
         var spl = fileName.Split('/');
         name = spl[spl.Length - 1].Split('.')[0];
-        NewGame(name);
+        NewGame(1);
 
     }
 

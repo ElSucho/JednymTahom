@@ -6,10 +6,11 @@ public class Tile : MonoBehaviour
 {
 
     public Color _baseColor, _offsetColor;
+    public Color _baseColor2, _offsetColor2;
     public SpriteRenderer _renderer;
     public GameObject _HighLight;
-    public GameObject _Tree;
-    public GameObject _Player;
+    public GameObject _Tree, _Tree1, _Tree2;
+    public GameObject _Player, _Player1, _Player2;
     public Color _selectTile;
 
     public char _znak;
@@ -19,9 +20,21 @@ public class Tile : MonoBehaviour
     public delegate void SelectAction(Tile target);
     public static event SelectAction OnSelectedEvent;
 
-    public void Init(bool isOffset, int x, int y, char znak)
+    public void Init(bool isOffset, int x, int y, char znak, int serie)
     {
-        _renderer.color = isOffset ? _offsetColor : _baseColor;
+        if (serie == 1)
+        {
+            _renderer.color = isOffset ? _offsetColor : _baseColor;
+            _Tree = _Tree1;
+            _Player = _Player1;
+        }
+
+        if (serie == 2)
+        {
+            _renderer.color = isOffset ? _offsetColor2 : _baseColor2;
+            _Tree = _Tree2;
+            _Player = _Player2;
+        }
 
         _x = x;
         _y = y;
