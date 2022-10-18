@@ -653,6 +653,9 @@ MonoBehaviour:
   choosePanel: {fileID: 595817735}
   rowInput: {fileID: 1807262892}
   columnInput: {fileID: 1380604542}
+  endMenu: {fileID: 1620333685}
+  playButton: {fileID: 1749677073}
+  kruznicaButton: {fileID: 2042472021}
 --- !u!4 &161079330
 Transform:
   m_ObjectHideFlags: 0
