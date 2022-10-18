@@ -91,7 +91,7 @@ public class GridManager : MonoBehaviour
     private void RiesenieCheck()
     {
        
-        if (solve)
+        if (!solve)
         {
             gameOver = true;
             endMenu.SetActive(true);

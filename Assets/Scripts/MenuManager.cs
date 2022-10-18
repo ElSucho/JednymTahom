@@ -31,6 +31,11 @@ public class MenuManager : MonoBehaviour
     public GameObject choosePanel;
     public InputField rowInput;
     public InputField columnInput;
+    public GameObject endMenu;
+    private bool editorKruznica = true;
+
+    public Button playButton;
+    public Button kruznicaButton;
 
     // Start is called before the first frame update
     void Start()
@@ -56,11 +61,32 @@ public class MenuManager : MonoBehaviour
         Button chooseB = chooseButton.GetComponent<Button>();
         chooseB.onClick.AddListener(Choose);
 
+        Button playBtn = playButton.GetComponent<Button>();
+        playBtn.onClick.AddListener(KruznicaKlik);
+
+        Button kruznicaBtn = kruznicaButton.GetComponent<Button>();
+        kruznicaBtn.onClick.AddListener(KruznicaKlik);
+
+
         input.onSubmit.AddListener(saveGame);
         rowInput.onSubmit.AddListener(ChooseInput);
         columnInput.onSubmit.AddListener(ChooseInput);
 
 
+    }
+
+    private void KruznicaKlik()
+    {
+        if (editorKruznica)
+        {
+            editorKruznica = false;
+            kruznicaButton.GetComponentInChildren<Text>().text = "çah";
+        }
+        else
+        {
+            editorKruznica = true;
+            kruznicaButton.GetComponentInChildren<Text>().text = "Kruznica";
+        }
     }
 
     public void Editor() {
@@ -91,11 +117,13 @@ public class MenuManager : MonoBehaviour
         gameMenu.GetComponent<Image>().color = c1;
         
         pickSerie.SetActive(false);
+        endMenu.GetComponent<Image>().color = c1;
         NewGame(1);
     }
 
     public void Serie2() {
         gameMenu.GetComponent<Image>().color = c2;
+        endMenu.GetComponent<Image>().color = c2;
 
         pickSerie.SetActive(false);
         NewGame(2);
