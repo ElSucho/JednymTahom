@@ -189,7 +189,7 @@ public class MenuManager : MonoBehaviour
         if (gd.mapa.Count != 0)
         {
             saveName.SetActive(false);
-            gd.Save(text);
+            gd.Save(text, editorKruznica);
         }
     }
 

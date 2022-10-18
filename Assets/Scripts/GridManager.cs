@@ -90,7 +90,7 @@ public class GridManager : MonoBehaviour
 
     private void RiesenieCheck()
     {
-        if (solve)
+        if (!solve)
         {
             gameOver = true;
             endMenu.SetActive(true);
@@ -298,7 +298,7 @@ public class GridManager : MonoBehaviour
     void NacitajLevel()
     {
 
-        var file = (TextAsset)Resources.Load(path + "map" + levelNumber.ToString());
+        var file = (TextAsset)Resources.Load(path + name);
         string[] strings = file.ToString().Split('\n');
 
         if (strings[0][0] == 'S') {
@@ -558,27 +558,35 @@ public class GridManager : MonoBehaviour
         menu.gameObject.SetActive(true);
     }
 
-    public void Save(string name)
+    public void Save(string name, bool kruznica)
     {
         //var str = saveLine();
-        if (editorGame)
+
+        var str = "";
+        foreach (var i in mapa)
         {
-            var str = "";
-            foreach (var i in mapa)
+
+            foreach (var ch in i)
             {
-
-                foreach (var ch in i)
-                {
-                    str += ch;
-                }
-                str += "\n";
+                str += ch;
             }
-            File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            saved = true;
+            str += "\n";
         }
+        if (kruznica)
+        {
+            str += "CRK";
+        }
+        else
+        {
+            str += "CRT";
+        } 
+       
+        File.WriteAllText(Application.dataPath + "/Resources/Created/" + name + ".txt", str);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        saved = true;
+
     }
 
     public void NewGame(int serie, int level = 1)
@@ -592,6 +600,7 @@ public class GridManager : MonoBehaviour
         actualLevel.text = "Level: " + levelNumber.ToString() + "/3";
         _serie = serie;
         path = "Sada" + serie.ToString() + "/";
+        name = "map" + level.ToString();
         if (actualTile != null)
             actualTile._Player.gameObject.SetActive(false);
         clear();
@@ -620,11 +629,14 @@ public class GridManager : MonoBehaviour
 
     public void loadSave()
     {
+        clear();
         string fileName = dialogWindow();
         var spl = fileName.Split('/');
         name = spl[spl.Length - 1].Split('.')[0];
-        NewGame(1);
-
+        _serie = 1;
+        path = "Created/";
+        NacitajLevel();
+        VytvorGrid();
     }
 
     private string dialogWindow()
