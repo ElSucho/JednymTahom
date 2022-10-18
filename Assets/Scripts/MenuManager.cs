@@ -102,7 +102,17 @@ public class MenuManager : MonoBehaviour
     }
 
     public void SelectSerie() {
-        pickSerie.SetActive(true);
+        if (!gd.saved)
+        {
+            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+            {
+                pickSerie.SetActive(true);
+            }
+        }
+        else
+        {
+            pickSerie.SetActive(true);
+        }
     }
     public void NewGame(int sada)
     {
@@ -127,7 +137,7 @@ public class MenuManager : MonoBehaviour
     }
 
     public void SaveMenu() {
-        if (gd.mapa.Count != 0)
+        if (gd.mapa.Count != 0 & gd.editorGame)
         {
             saveName.SetActive(true);
         }

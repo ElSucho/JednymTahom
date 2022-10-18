@@ -46,6 +46,7 @@ public class GridManager : MonoBehaviour
     public Button playerButton;
     public Button tileButton;
     private char editorTileChoosen = '0';
+    private bool wizi;
 
 
 
@@ -446,6 +447,18 @@ public class GridManager : MonoBehaviour
     void SelectAction(Tile target)
     {
         if (editorGame & editorTileChoosen != '0') {
+            if (editorTileChoosen == 'z' & wizi) {
+                return;
+            }
+            if (editorTileChoosen == 'z')
+            {
+                wizi = true;
+            }
+            else {
+                if (target._znak == 'z') {
+                    wizi = false;
+                }
+            }
             target._znak = editorTileChoosen;
             target.refresh();
             mapa[_height - target._y - 1][target._x] = editorTileChoosen;
@@ -521,7 +534,8 @@ public class GridManager : MonoBehaviour
 
     public void Save(string name)
     {
-        var str = saveLine();
+        //var str = saveLine();
+        var str = "";
         foreach (var i in mapa)
         {
 
