@@ -90,7 +90,6 @@ public class GridManager : MonoBehaviour
 
     private void RiesenieCheck()
     {
-       
         if (solve)
         {
             gameOver = true;
@@ -562,22 +561,24 @@ public class GridManager : MonoBehaviour
     public void Save(string name)
     {
         //var str = saveLine();
-        var str = "";
-        foreach (var i in mapa)
+        if (editorGame)
         {
-
-            foreach (var ch in i)
+            var str = "";
+            foreach (var i in mapa)
             {
-                str += ch;
+
+                foreach (var ch in i)
+                {
+                    str += ch;
+                }
+                str += "\n";
             }
-            str += "\n";
+            File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            saved = true;
         }
-
-        File.WriteAllText(Application.dataPath + "/Resources/" + name + ".txt", str);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-
-        saved = true;
     }
 
     public void NewGame(int serie, int level = 1)
