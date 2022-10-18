@@ -26,40 +26,59 @@ public class MenuManager : MonoBehaviour
     public Button serie2;
     public GameObject gameMenu;
     public Color c1, c2;
+    public GameObject ePanel;
+    public Button chooseButton;
+    public GameObject choosePanel;
+    public InputField rowInput;
+    public InputField columnInput;
 
     // Start is called before the first frame update
     void Start()
     {
         Button novaHraB = novaHraButton.GetComponent<Button>();
         novaHraB.onClick.AddListener(SelectSerie);
-
         Button ulozHruB = ulozHruButton.GetComponent<Button>();
         ulozHruB.onClick.AddListener(SaveMenu);
-
         Button nacitajHruB = nacitajHruButton.GetComponent<Button>();
         nacitajHruB.onClick.AddListener(Load);
-
         Button napovedaB = napovedaButton.GetComponent<Button>();
         napovedaB.onClick.AddListener(Napoveda);
-
         Button editorLevelovB = editorLevelovButton.GetComponent<Button>();
-        editorLevelovB.onClick.AddListener(Continue);
-
+        editorLevelovB.onClick.AddListener(Editor);
         Button ukonciHruB = ukonciHruButton.GetComponent<Button>();
         ukonciHruB.onClick.AddListener(Quit);
-
         Button pokracujB = pokracujButton.GetComponent<Button>();
         pokracujB.onClick.AddListener(Continue);
-
         Button serie1B = serie1.GetComponent<Button>();
         serie1B.onClick.AddListener(Serie1);
-
         Button serie2B = serie2.GetComponent<Button>();
         serie2B.onClick.AddListener(Serie2);
+        Button chooseB = chooseButton.GetComponent<Button>();
+        chooseB.onClick.AddListener(Choose);
 
         input.onSubmit.AddListener(saveGame);
+        rowInput.onSubmit.AddListener(ChooseInput);
+        columnInput.onSubmit.AddListener(ChooseInput);
 
 
+    }
+
+    public void Editor() {
+        menu.SetActive(false);
+        gameMenu.SetActive(false);
+        ePanel.SetActive(true);
+        gd.clear();
+    }
+
+    public void Choose() {
+        choosePanel.SetActive(true);
+    }
+
+    public void ChooseInput(string text) {
+        if ((rowInput.text != "") & (columnInput.text != "")) {
+            gd.NacitajEditor(int.Parse(rowInput.text), int.Parse(columnInput.text));
+            choosePanel.SetActive(false);
+        }
     }
 
     public void Napoveda()

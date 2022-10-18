@@ -648,6 +648,11 @@ MonoBehaviour:
   gameMenu: {fileID: 1203948391}
   c1: {r: 0.38431373, g: 0.7058824, b: 0.2509804, a: 1}
   c2: {r: 0.6415094, g: 0.25720897, b: 0.606709, a: 1}
+  ePanel: {fileID: 335920145}
+  chooseButton: {fileID: 1987075199}
+  choosePanel: {fileID: 595817735}
+  rowInput: {fileID: 1807262892}
+  columnInput: {fileID: 1380604542}
 --- !u!4 &161079330
 Transform:
   m_ObjectHideFlags: 0
@@ -1903,7 +1908,7 @@ GameObject:
   - component: {fileID: 646401843}
   - component: {fileID: 646401842}
   m_Layer: 0
-  m_Name: Button (2)
+  m_Name: tileButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2365,8 +2370,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -35}
-  m_SizeDelta: {x: 300, y: 50}
+  m_AnchoredPosition: {x: 5, y: -44.904}
+  m_SizeDelta: {x: 340, y: 69.8086}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &869961976
 MonoBehaviour:
@@ -2402,6 +2407,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'Level 1/3
+
 
 '
 --- !u!222 &869961977
@@ -2451,6 +2457,8 @@ MonoBehaviour:
   menuButton: {fileID: 1272365376}
   continueButton: {fileID: 11271056}
   next: {fileID: 1619882582}
+  odznova: {fileID: 646894496}
+  endNext: {fileID: 355853120}
   previous: {fileID: 570909871}
   menu: {fileID: 1326779495}
   endMenu: {fileID: 1620333685}
@@ -2458,6 +2466,9 @@ MonoBehaviour:
   hint: {fileID: 56748679}
   actualLevel: {fileID: 869961976}
   levelType: {fileID: 1800712208}
+  treeButton: {fileID: 1593930295}
+  playerButton: {fileID: 2036276906}
+  tileButton: {fileID: 646401842}
 --- !u!222 &953992395
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3713,7 +3724,7 @@ GameObject:
   - component: {fileID: 1380604543}
   - component: {fileID: 1380604542}
   m_Layer: 0
-  m_Name: InputField
+  m_Name: columnInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4140,7 +4151,7 @@ GameObject:
   - component: {fileID: 1593930296}
   - component: {fileID: 1593930295}
   m_Layer: 0
-  m_Name: Button
+  m_Name: treeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5349,7 +5360,7 @@ GameObject:
   - component: {fileID: 1807262893}
   - component: {fileID: 1807262892}
   m_Layer: 0
-  m_Name: InputField
+  m_Name: rowInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6233,7 +6244,7 @@ GameObject:
   - component: {fileID: 2036276907}
   - component: {fileID: 2036276906}
   m_Layer: 0
-  m_Name: Button (1)
+  m_Name: playerButtom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

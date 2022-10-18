@@ -40,7 +40,12 @@ public class GridManager : MonoBehaviour
     public Text actualLevel;
     public Text levelType;
     private bool solve;
-
+    private bool editorGame = false;
+    private bool gameOver = false;
+    public Button treeButton;
+    public Button playerButton;
+    public Button tileButton;
+    private char editorTileChoosen = '0';
 
 
 
@@ -59,18 +64,24 @@ public class GridManager : MonoBehaviour
         nextBtn.onClick.AddListener(nextGame);
         Button previousBtn = previous.GetComponent<Button>();
         previousBtn.onClick.AddListener(previousGame);
-
         Button odznovaBtn = odznova.GetComponent<Button>();
-        odznovaBtn.onClick.AddListener(()=>NewGame(_serie, levelNumber));
+        odznovaBtn.onClick.AddListener(() => NewGame(_serie, levelNumber));
         Button endNextBtn = endNext.GetComponent<Button>();
         endNextBtn.onClick.AddListener(nextGame);
+
+        Button treeBtn = treeButton.GetComponent<Button>();
+        treeBtn.onClick.AddListener(() => editorChooseTile('s'));
+        Button playerBtn = playerButton.GetComponent<Button>();
+        playerBtn.onClick.AddListener(() => editorChooseTile('z'));
+        Button tileBtn = tileButton.GetComponent<Button>();
+        tileBtn.onClick.AddListener(() => editorChooseTile('.'));
 
         _tiles = new Dictionary<Vector2, Tile>();
     }
 
     // Update is called once per frame
 
-    private void clear() {
+    public void clear() {
         foreach (Tile t in _tiles.Values) {
             Destroy(t._Player);
             Destroy(t._Tree);
@@ -84,56 +95,64 @@ public class GridManager : MonoBehaviour
         }
         kroky.Clear();
         saved = true;
+        actualTile = null;
+    }
+
+    private void editorChooseTile(char ch) {
+        editorTileChoosen = ch;
     }
 
     private void previousGame()
     {
 
-        if (levelNumber -1 > 0)
+        if (levelNumber - 1 > 0)
         {
             NewGame(_serie, levelNumber -= 1);
-            
+
         }
     }
 
     private void nextGame() {
-        
+
         if (levelNumber + 1 < 4)
         {
             NewGame(_serie, levelNumber += 1);
+            endMenu.SetActive(false);
         }
     }
-    
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            if (actualX + 1 < _width)
+        if (!editorGame & !gameOver) {
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1'))
+                if (actualX + 1 < _width)
                 {
-                    actualTile._znak = '1';
-                    actualTile._Player.SetActive(false);
-                    mapa[_height - actualY - 1][actualX] = '1';
-
-                    var oldTile = actualTile;
-
-                    actualTile = GetTileAtPosition(new Vector2(actualX + 1, actualY));
-                    actualTile._znak = 'z';
-                    actualTile._Player.SetActive(true);
-
-
-
-                    var line = CreateLine(1, 0);
-
-                    kroky.Add(new Pair(oldTile, line));
-
-                    actualX += 1;
-
-                    saved = false;
-                    if (Check())
+                    if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1'))
                     {
-                        endMenu.SetActive(true);
+                        actualTile._znak = '1';
+                        actualTile._Player.SetActive(false);
+                        mapa[_height - actualY - 1][actualX] = '1';
+
+                        var oldTile = actualTile;
+
+                        actualTile = GetTileAtPosition(new Vector2(actualX + 1, actualY));
+                        actualTile._znak = 'z';
+                        actualTile._Player.SetActive(true);
+
+
+
+                        var line = CreateLine(1, 0);
+
+                        kroky.Add(new Pair(oldTile, line));
+
+                        actualX += 1;
+
+                        saved = false;
+                        if (Check())
+                        {
+                            endMenu.SetActive(true);
+                        }
                     }
                 }
             }
@@ -141,31 +160,33 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-
-            if (actualY - 1 >= 0)
+            if (!editorGame & !gameOver)
             {
-                if ((GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != '1'))
+                if (actualY - 1 >= 0)
                 {
-
-                    actualTile._znak = '1';
-                    actualTile._Player.SetActive(false);
-                    mapa[_height - actualY - 1][actualX] = '1';
-
-                    var oldTile = actualTile;
-
-                    actualTile = GetTileAtPosition(new Vector2(actualX, actualY - 1));
-                    actualTile._znak = 'z';
-                    actualTile._Player.SetActive(true);
-
-                    var line = CreateLine(0, -1);
-
-                    kroky.Add(new Pair(oldTile, line));
-                    actualY -= 1;
-
-                    saved = false;
-                    if (Check())
+                    if ((GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != '1'))
                     {
-                        endMenu.SetActive(true);
+
+                        actualTile._znak = '1';
+                        actualTile._Player.SetActive(false);
+                        mapa[_height - actualY - 1][actualX] = '1';
+
+                        var oldTile = actualTile;
+
+                        actualTile = GetTileAtPosition(new Vector2(actualX, actualY - 1));
+                        actualTile._znak = 'z';
+                        actualTile._Player.SetActive(true);
+
+                        var line = CreateLine(0, -1);
+
+                        kroky.Add(new Pair(oldTile, line));
+                        actualY -= 1;
+
+                        saved = false;
+                        if (Check())
+                        {
+                            endMenu.SetActive(true);
+                        }
                     }
                 }
             }
@@ -174,31 +195,33 @@ public class GridManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
 
-
-            if (actualY + 1 < _height)
+            if (!editorGame & !gameOver)
             {
-                if ((GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != '1'))
+                if (actualY + 1 < _height)
                 {
-
-                    actualTile._znak = '1';
-                    actualTile._Player.SetActive(false);
-                    mapa[_height - actualY - 1][actualX] = '1';
-
-                    var oldTile = actualTile;
-
-                    actualTile = GetTileAtPosition(new Vector2(actualX, actualY + 1));
-                    actualTile._znak = 'z';
-                    actualTile._Player.SetActive(true);
-
-                    var line = CreateLine(0, 1);
-
-                    kroky.Add(new Pair(oldTile, line));
-                    actualY += 1;
-
-                    saved = false;
-                    if (Check())
+                    if ((GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != '1'))
                     {
-                        endMenu.SetActive(true);
+
+                        actualTile._znak = '1';
+                        actualTile._Player.SetActive(false);
+                        mapa[_height - actualY - 1][actualX] = '1';
+
+                        var oldTile = actualTile;
+
+                        actualTile = GetTileAtPosition(new Vector2(actualX, actualY + 1));
+                        actualTile._znak = 'z';
+                        actualTile._Player.SetActive(true);
+
+                        var line = CreateLine(0, 1);
+
+                        kroky.Add(new Pair(oldTile, line));
+                        actualY += 1;
+
+                        saved = false;
+                        if (Check())
+                        {
+                            endMenu.SetActive(true);
+                        }
                     }
                 }
             }
@@ -206,29 +229,32 @@ public class GridManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (actualX - 1 >= 0)
+            if (!editorGame & !gameOver)
             {
-                if ((GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != '1'))
+                if (actualX - 1 >= 0)
                 {
-                    actualTile._znak = '1';
-                    actualTile._Player.SetActive(false);
-                    mapa[_height - actualY - 1][actualX] = '1';
-
-                    var oldTile = actualTile;
-
-                    actualTile = GetTileAtPosition(new Vector2(actualX - 1, actualY));
-                    actualTile._znak = 'z';
-                    actualTile._Player.SetActive(true);
-
-                    var line = CreateLine(-1, 0);
-
-                    kroky.Add(new Pair(oldTile, line));
-                    actualX -= 1;
-
-                    saved = false;
-                    if (Check())
+                    if ((GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != '1'))
                     {
-                        endMenu.SetActive(true);
+                        actualTile._znak = '1';
+                        actualTile._Player.SetActive(false);
+                        mapa[_height - actualY - 1][actualX] = '1';
+
+                        var oldTile = actualTile;
+
+                        actualTile = GetTileAtPosition(new Vector2(actualX - 1, actualY));
+                        actualTile._znak = 'z';
+                        actualTile._Player.SetActive(true);
+
+                        var line = CreateLine(-1, 0);
+
+                        kroky.Add(new Pair(oldTile, line));
+                        actualX -= 1;
+
+                        saved = false;
+                        if (Check())
+                        {
+                            endMenu.SetActive(true);
+                        }
                     }
                 }
             }
@@ -248,17 +274,17 @@ public class GridManager : MonoBehaviour
 
     void NacitajLevel()
     {
-        
+
         var file = (TextAsset)Resources.Load(path + "map" + levelNumber.ToString());
         string[] strings = file.ToString().Split('\n');
 
         if (strings[0][0] == 'S') {
             var item = strings[0];
             var saveLine = strings[0].Remove(0, 1).Split('|');
-            foreach(var sL in saveLine)
+            foreach (var sL in saveLine)
             {
                 var coordinations = sL.Split('-');
-                v0.Add(new Vector2(float.Parse(coordinations[0].Replace('.',',')), float.Parse(coordinations[1].Replace('.', ','))));
+                v0.Add(new Vector2(float.Parse(coordinations[0].Replace('.', ',')), float.Parse(coordinations[1].Replace('.', ','))));
                 v1.Add(new Vector2(float.Parse(coordinations[2].Replace('.', ',')), float.Parse(coordinations[3].Replace('.', ','))));
                 vT.Add(new Vector2(float.Parse(coordinations[4].Replace('.', ',')), float.Parse(coordinations[5].Replace('.', ','))));
             }
@@ -268,7 +294,7 @@ public class GridManager : MonoBehaviour
         int i = 0;
         int j = 0;
 
-        if (strings[strings.Length-1][0] == 'D')
+        if (strings[strings.Length - 1][0] == 'D')
         {
             if (strings[strings.Length - 1][1] == 'R')
             {
@@ -331,7 +357,7 @@ public class GridManager : MonoBehaviour
 
                 _tiles[new Vector2(x, y)] = tile;
             }
-        
+
         }
         if (v0.Count > 0) {
             for (int l = 0; l <= v0.Count - 1; l++) {
@@ -349,8 +375,65 @@ public class GridManager : MonoBehaviour
             vT.Clear();
 
         }
-        actualTile._Player.SetActive(true);
-        _cam.transform.position = new Vector3((float)_width / 2 , (float)_height / 2 - 0.2F, -10);
+        if (actualTile != null)
+        {
+            actualTile._Player.SetActive(true);
+        }
+        _cam.transform.position = new Vector3((float)_width / 2, (float)_height / 2 - 0.2F, -10);
+    }
+
+    public void NacitajEditor(int row, int column)
+    {
+        if ((mapa.Count == 0) & (editorGame == false)){
+            clear();
+        }
+        if (mapa.Count == 0)
+        {
+            editorGame = true;
+            _width = column;
+            _height = row;
+            _serie = 1;
+            for (int x = 0; x < _height; x++)
+            {
+                mapa.Add(new List<char>());
+                for (int y = 0; y < _width; y++)
+                {
+                    mapa[x].Add('.');
+                }
+            }
+        }
+        else {
+            modifeMap(row - mapa.Count, column - mapa[1].Count);
+        }
+        VytvorGrid();
+        editorGame = true;
+    }
+
+    public void modifeMap(int row, int column)
+    {
+        for (int r = 0; r < row; r++)
+        {
+            if (row > 0)
+                mapa.Add(new string('.', mapa[0].Count).ToCharArray().ToList());
+            if (row < 0)
+                mapa.RemoveAt(mapa.Count - 1);
+        }
+        foreach (List<char> lists in mapa)
+            {
+            for (int c = 0; c < column; c++)
+            {
+                if (column > 0)
+                {
+                    lists.Add('.');
+                }
+                else {
+                    lists.RemoveAt(lists.Count - 1);
+                }
+            }
+        }
+    
+        _height += row;
+        _width += column;
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
@@ -362,7 +445,11 @@ public class GridManager : MonoBehaviour
 
     void SelectAction(Tile target)
     {
-
+        if (editorGame & editorTileChoosen != '0') {
+            target._znak = editorTileChoosen;
+            target.refresh();
+            mapa[_height - target._y - 1][target._x] = editorTileChoosen;
+        }
     }
     LineRenderer CreateLine(int x, int y)
     {
@@ -395,6 +482,7 @@ public class GridManager : MonoBehaviour
                 if (GetTileAtPosition(new Vector2(x, y))._znak == '.') return false;
             }
         }
+        gameOver = true;
         return true;
     }
 
@@ -453,7 +541,10 @@ public class GridManager : MonoBehaviour
 
     public void NewGame(int serie, int level = 1)
     {
+        endMenu.SetActive(false);
         levelNumber = level;
+        editorGame = false;
+        gameOver = false;
         actualLevel.text = "Level: " + levelNumber.ToString() + "/3";
         _serie = serie;
         path = "Sada" + serie.ToString() + "/";

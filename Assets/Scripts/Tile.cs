@@ -44,6 +44,13 @@ public class Tile : MonoBehaviour
         if (znak == 'z') _Player.SetActive(true);
     }
 
+    public void refresh() {
+        _Tree.SetActive(false);
+        _Player.SetActive(false);
+
+        if (_znak == 's') _Tree.SetActive(true);
+        if (_znak == 'z') _Player.SetActive(true);
+    }
 
     private void OnMouseEnter()
     {
