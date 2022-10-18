@@ -28,6 +28,7 @@ public class GridManager : MonoBehaviour
     public Button endNext;
     public Button previous;
     public GameObject menu;
+    public GameObject menuPanel;
     public GameObject endMenu;
     private int levelNumber = 1;
     private List<Vector2> v0 = new List<Vector2>();
@@ -40,13 +41,16 @@ public class GridManager : MonoBehaviour
     public Text actualLevel;
     public Text levelType;
     private bool solve;
-    private bool editorGame = false;
+    public bool editorGame = false;
     private bool gameOver = false;
     public Button treeButton;
     public Button playerButton;
     public Button tileButton;
+    public Button riesenieButton;
     private char editorTileChoosen = '0';
     private bool wizi;
+
+    public GameObject editorPanel;
 
 
 
@@ -77,7 +81,25 @@ public class GridManager : MonoBehaviour
         Button tileBtn = tileButton.GetComponent<Button>();
         tileBtn.onClick.AddListener(() => editorChooseTile('.'));
 
+        Button riesenieBtn = riesenieButton.GetComponent<Button>();
+        riesenieBtn.onClick.AddListener(RiesenieCheck);
+        
+
         _tiles = new Dictionary<Vector2, Tile>();
+    }
+
+    private void RiesenieCheck()
+    {
+       
+        if (solve)
+        {
+            gameOver = true;
+            endMenu.SetActive(true);
+        }
+        else
+        {
+            EditorUtility.DisplayDialog("Nemáš pravdu", "Táto úloha má riešenie", "dobre...");
+        }
     }
 
     // Update is called once per frame
@@ -87,7 +109,8 @@ public class GridManager : MonoBehaviour
             Destroy(t._Player);
             Destroy(t._Tree);
             Destroy(t._renderer);
-
+            Destroy(t._HighLight);
+            Destroy(t);
         }
         _tiles.Clear();
         mapa.Clear();
@@ -385,6 +408,10 @@ public class GridManager : MonoBehaviour
 
     public void NacitajEditor(int row, int column)
     {
+        if ((row > 8) | (column > 15)){
+            EditorUtility.DisplayDialog("Ve¾ke pole", "Maximálny poèet riadkov je 15 a ståpcov 10", "OK");
+            return;
+        }
         if ((mapa.Count == 0) & (editorGame == false)){
             clear();
         }
@@ -555,6 +582,8 @@ public class GridManager : MonoBehaviour
 
     public void NewGame(int serie, int level = 1)
     {
+        menuPanel.SetActive(true);
+        editorPanel.SetActive(false);
         endMenu.SetActive(false);
         levelNumber = level;
         editorGame = false;
