@@ -49,6 +49,13 @@ public class GridManager : MonoBehaviour
     public Button riesenieButton;
     private char editorTileChoosen = '0';
     private bool wizi;
+    private bool klik = true;
+
+    public Button ukazRiesenieButton;
+    public GameObject sada1level1;
+    public GameObject sada1level2;
+    public GameObject sada1level3;
+    public GameObject sada2level3;
 
     public GameObject editorPanel;
 
@@ -83,9 +90,58 @@ public class GridManager : MonoBehaviour
 
         Button riesenieBtn = riesenieButton.GetComponent<Button>();
         riesenieBtn.onClick.AddListener(RiesenieCheck);
-        
+
+        Button ukazRiesenieBtn = ukazRiesenieButton.GetComponent<Button>();
+        ukazRiesenieBtn.onClick.AddListener(UkazRiesenie);
+
 
         _tiles = new Dictionary<Vector2, Tile>();
+    }
+
+    private void UkazRiesenie()
+    {
+        if (klik) { 
+            if (_serie == 1)
+            {
+                if (levelNumber == 1)
+                {
+                    sada1level1.SetActive(true);
+                }
+                if (levelNumber == 2)
+                {
+                    sada1level2.SetActive(true);
+                }
+                if (levelNumber == 3)
+                {
+                    sada1level3.SetActive(true);
+                }
+
+            }
+            else
+            {
+                if (levelNumber == 1)
+                {
+                    EditorUtility.DisplayDialog("Úloha nemá riešenie", "Táto úloha nemá riešenie", "dobre");
+                }
+                if (levelNumber == 2)
+                {
+                    EditorUtility.DisplayDialog("Úloha nemá riešenie", "Táto úloha nemá riešenie", "dobre");
+                }
+                if (levelNumber == 3)
+                {
+                    sada2level3.SetActive(true);
+                }
+            }
+            klik = false;
+        }
+        else
+        {
+            sada1level1.SetActive(false);
+            sada1level2.SetActive(false);
+            sada1level3.SetActive(false);
+            sada2level3.SetActive(false);
+            klik = true;
+        }
     }
 
     private void RiesenieCheck()
@@ -407,7 +463,7 @@ public class GridManager : MonoBehaviour
 
     public void NacitajEditor(int row, int column)
     {
-        if ((row > 8) | (column > 15)){
+        if ((row > 10) | (column > 15)){
             EditorUtility.DisplayDialog("Ve¾ke pole", "Maximálny poèet riadkov je 15 a ståpcov 10", "OK");
             return;
         }
@@ -550,6 +606,7 @@ public class GridManager : MonoBehaviour
 
     public void showMenu()
     {
+        
         hint.SetActive(false);
         if (mapa.Count != 0)
         {
