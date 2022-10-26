@@ -60,12 +60,6 @@ public class GridManager : MonoBehaviour
     public GameObject sada2level3;
 
     public GameObject editorPanel;
-    public GameObject nemaRieseniePanel;
-    public GameObject nemasPravduPanel;
-
-    public Button dobreButton;
-    public Button dobreButton2;
-
     public bool pauza = false;
 
     public GameObject drop;
@@ -105,26 +99,8 @@ public class GridManager : MonoBehaviour
         Button ukazRiesenieBtn = ukazRiesenieButton.GetComponent<Button>();
         ukazRiesenieBtn.onClick.AddListener(UkazRiesenie);
 
-        Button dobreBtn = dobreButton.GetComponent<Button>();
-        dobreBtn.onClick.AddListener(Dobre);
-
-        Button dobreBtn2 = dobreButton2.GetComponent<Button>();
-        dobreBtn2.onClick.AddListener(Dobre2);
-
 
         _tiles = new Dictionary<Vector2, Tile>();
-    }
-
-    private void Dobre2()
-    {
-        nemasPravduPanel.SetActive(false);
-
-    }
-
-    private void Dobre()
-    {
-        nemaRieseniePanel.SetActive(false);
-
     }
 
     private void UkazRiesenie()
@@ -150,11 +126,11 @@ public class GridManager : MonoBehaviour
             {
                 if (levelNumber == 1)
                 {
-                    nemaRieseniePanel.SetActive(true);
+                    EditorUtility.DisplayDialog("Úloha nemá riešenie", "Táto úloha nemá riešenie", "dobre");
                 }
                 if (levelNumber == 2)
                 {
-                    nemaRieseniePanel.SetActive(true);
+                    EditorUtility.DisplayDialog("Úloha nemá riešenie", "Táto úloha nemá riešenie", "dobre");
                 }
                 if (levelNumber == 3)
                 {
@@ -182,7 +158,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            nemasPravduPanel.SetActive(true);
+            EditorUtility.DisplayDialog("Nemáš pravdu", "Táto úloha má riešenie", "dobre...");
         }
     }
 
@@ -553,6 +529,7 @@ public class GridManager : MonoBehaviour
     public void NacitajEditor(int row, int column)
     {
         if ((row > 10) | (column > 15)){
+            EditorUtility.DisplayDialog("Ve¾ke pole", "Maximálny poèet riadkov je 15 a ståpcov 10", "OK");
             return;
         }
         if ((mapa.Count == 0) & (editorGame == false)){
