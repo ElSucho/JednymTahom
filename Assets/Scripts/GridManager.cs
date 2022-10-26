@@ -41,6 +41,8 @@ public class GridManager : MonoBehaviour
     public Text actualLevel;
     public Text levelType;
     private bool solve;
+    public bool kruznica;
+    public Vector2 zaciatok;
     public bool editorGame = false;
     private bool gameOver = false;
     public Button treeButton;
@@ -58,6 +60,7 @@ public class GridManager : MonoBehaviour
     public GameObject sada2level3;
 
     public GameObject editorPanel;
+    public bool pauza = false;
 
 
 
@@ -209,9 +212,12 @@ public class GridManager : MonoBehaviour
                 {
                     if ((GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX + 1, actualY))._znak != '1'))
                     {
-                        actualTile._znak = '1';
+                        if ((actualX != zaciatok.x) || (actualY != zaciatok.y))
+                        {
+                            actualTile._znak = '1';
+                            mapa[_height - actualY - 1][actualX] = '1';
+                        }
                         actualTile._Player.SetActive(false);
-                        mapa[_height - actualY - 1][actualX] = '1';
 
                         var oldTile = actualTile;
 
@@ -226,11 +232,18 @@ public class GridManager : MonoBehaviour
                         kroky.Add(new Pair(oldTile, line));
 
                         actualX += 1;
-
+                        
                         saved = false;
                         if (Check())
                         {
-                            endMenu.SetActive(true);
+                            if (kruznica && (actualX == zaciatok.x && actualY == zaciatok.y)) {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
+                            if (!kruznica) {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
                         }
                     }
                 }
@@ -246,9 +259,12 @@ public class GridManager : MonoBehaviour
                     if ((GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY - 1))._znak != '1'))
                     {
 
-                        actualTile._znak = '1';
+                        if ((actualX != zaciatok.x) || (actualY != zaciatok.y))
+                        {
+                            actualTile._znak = '1';
+                            mapa[_height - actualY - 1][actualX] = '1';
+                        }
                         actualTile._Player.SetActive(false);
-                        mapa[_height - actualY - 1][actualX] = '1';
 
                         var oldTile = actualTile;
 
@@ -264,7 +280,16 @@ public class GridManager : MonoBehaviour
                         saved = false;
                         if (Check())
                         {
-                            endMenu.SetActive(true);
+                            if (kruznica && (actualX == zaciatok.x && actualY == zaciatok.y))
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
+                            if (!kruznica)
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
                         }
                     }
                 }
@@ -281,9 +306,12 @@ public class GridManager : MonoBehaviour
                     if ((GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != 's') & (GetTileAtPosition(new Vector2(actualX, actualY + 1))._znak != '1'))
                     {
 
-                        actualTile._znak = '1';
+                        if ((actualX != zaciatok.x) || (actualY != zaciatok.y))
+                        {
+                            actualTile._znak = '1';
+                            mapa[_height - actualY - 1][actualX] = '1';
+                        }
                         actualTile._Player.SetActive(false);
-                        mapa[_height - actualY - 1][actualX] = '1';
 
                         var oldTile = actualTile;
 
@@ -299,7 +327,16 @@ public class GridManager : MonoBehaviour
                         saved = false;
                         if (Check())
                         {
-                            endMenu.SetActive(true);
+                            if (kruznica && (actualX == zaciatok.x && actualY == zaciatok.y))
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
+                            if (!kruznica)
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
                         }
                     }
                 }
@@ -314,9 +351,12 @@ public class GridManager : MonoBehaviour
                 {
                     if ((GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != 's') & (GetTileAtPosition(new Vector2(actualX - 1, actualY))._znak != '1'))
                     {
-                        actualTile._znak = '1';
+                        if ((actualX != zaciatok.x) || (actualY != zaciatok.y))
+                        {
+                            actualTile._znak = '1';
+                            mapa[_height - actualY - 1][actualX] = '1';
+                        }
                         actualTile._Player.SetActive(false);
-                        mapa[_height - actualY - 1][actualX] = '1';
 
                         var oldTile = actualTile;
 
@@ -332,7 +372,16 @@ public class GridManager : MonoBehaviour
                         saved = false;
                         if (Check())
                         {
-                            endMenu.SetActive(true);
+                            if (kruznica && (actualX == zaciatok.x && actualY == zaciatok.y))
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
+                            if (!kruznica)
+                            {
+                                endMenu.SetActive(true);
+                                gameOver = true;
+                            }
                         }
                     }
                 }
@@ -348,6 +397,7 @@ public class GridManager : MonoBehaviour
         {
 
             menu.SetActive(true);
+            
         }
     }
 
@@ -381,9 +431,11 @@ public class GridManager : MonoBehaviour
                 if (strings[strings.Length - 1][2] == 'K')
                 {
                     levelType.text = "Kruûnica";
+                    kruznica = true;
                 }
                 else
                 {
+                    kruznica = false;
                     levelType.text = "çah";
                 }
             }
@@ -427,6 +479,7 @@ public class GridManager : MonoBehaviour
 
                 if (mapa[_height - y - 1][x] == 'z')
                 {
+                    zaciatok = new Vector2(x, y);
                     actualX = x;
                     actualY = y;
                     actualTile = tile;
@@ -494,7 +547,7 @@ public class GridManager : MonoBehaviour
 
     public void modifeMap(int row, int column)
     {
-        for (int r = 0; r < row; r++)
+        for (int r = 0; r < Math.Abs(row); r++)
         {
             if (row > 0)
                 mapa.Add(new string('.', mapa[0].Count).ToCharArray().ToList());
@@ -503,7 +556,7 @@ public class GridManager : MonoBehaviour
         }
         foreach (List<char> lists in mapa)
             {
-            for (int c = 0; c < column; c++)
+            for (int c = 0; c < Math.Abs(column); c++)
             {
                 if (column > 0)
                 {
@@ -514,10 +567,25 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-    
+        foreach (Tile t in _tiles.Values)
+        {
+            Destroy(t._Player);
+            Destroy(t._Tree);
+            Destroy(t._renderer);
+            Destroy(t._HighLight);
+            Destroy(t);
+        }
         _height += row;
         _width += column;
-        _cam.transform.position = new Vector3((float)_width / 2, (float)_height / 2 - 0.2F, -10); 
+
+        foreach (Tile t in _tiles.Values)
+        {
+            Destroy(t._Player);
+            Destroy(t._Tree);
+            Destroy(t._renderer);
+            Destroy(t._HighLight);
+            Destroy(t);
+        }
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
@@ -529,6 +597,10 @@ public class GridManager : MonoBehaviour
 
     void SelectAction(Tile target)
     {
+
+        if (pauza) {
+            return;
+        }
         if (editorGame & editorTileChoosen != '0') {
             if (editorTileChoosen == 'z' & wizi) {
                 return;
@@ -578,13 +650,15 @@ public class GridManager : MonoBehaviour
                 if (GetTileAtPosition(new Vector2(x, y))._znak == '.') return false;
             }
         }
-        gameOver = true;
         return true;
     }
 
 
     public void back()
     {
+        if (gameOver) {
+            return;
+        }
         if (kroky.Count > 0)
         {
             var pair = kroky[kroky.Count-1];
@@ -607,7 +681,9 @@ public class GridManager : MonoBehaviour
 
     public void showMenu()
     {
-        
+        if (gameOver) {
+            return;
+        }
         hint.SetActive(false);
         if (mapa.Count != 0)
         {

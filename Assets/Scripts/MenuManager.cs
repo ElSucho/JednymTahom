@@ -87,11 +87,7 @@ public class MenuManager : MonoBehaviour
 
     private void playKlik()
     {
-        
-        
-        playPanel.SetActive(true);
-        
-        
+        playPanel.SetActive(true);   
     }
 
     private void KruznicaKlik()
@@ -116,6 +112,7 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Choose() {
+        gd.pauza = true;
         choosePanel.SetActive(true);
     }
 
@@ -123,6 +120,7 @@ public class MenuManager : MonoBehaviour
         if ((rowInput.text != "") & (columnInput.text != "")) {
             gd.NacitajEditor(int.Parse(rowInput.text), int.Parse(columnInput.text));
             choosePanel.SetActive(false);
+            gd.pauza = false;
         }
     }
 
