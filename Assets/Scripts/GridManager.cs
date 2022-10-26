@@ -27,6 +27,7 @@ public class GridManager : MonoBehaviour
     public Button odznova;
     public Button endNext;
     public Button previous;
+    public GameObject ePanel;
     public GameObject menu;
     public GameObject menuPanel;
     public GameObject endMenu;
@@ -58,7 +59,6 @@ public class GridManager : MonoBehaviour
     public GameObject sada2level3;
 
     public GameObject editorPanel;
-
 
 
     // Start is called before the first frame update
@@ -93,6 +93,8 @@ public class GridManager : MonoBehaviour
 
         Button ukazRiesenieBtn = ukazRiesenieButton.GetComponent<Button>();
         ukazRiesenieBtn.onClick.AddListener(UkazRiesenie);
+
+        
 
 
         _tiles = new Dictionary<Vector2, Tile>();
@@ -187,7 +189,12 @@ public class GridManager : MonoBehaviour
         if (levelNumber - 1 > 0)
         {
             NewGame(_serie, levelNumber -= 1);
-
+            endMenu.SetActive(false);
+            sada1level1.SetActive(false);
+            sada1level2.SetActive(false);
+            sada1level3.SetActive(false);
+            sada2level3.SetActive(false);
+            klik = true;
         }
     }
 
@@ -197,6 +204,11 @@ public class GridManager : MonoBehaviour
         {
             NewGame(_serie, levelNumber += 1);
             endMenu.SetActive(false);
+            sada1level1.SetActive(false);
+            sada1level2.SetActive(false);
+            sada1level3.SetActive(false);
+            sada2level3.SetActive(false);
+            klik = true;
         }
     }
 
@@ -606,7 +618,6 @@ public class GridManager : MonoBehaviour
 
     public void showMenu()
     {
-        
         hint.SetActive(false);
         if (mapa.Count != 0)
         {

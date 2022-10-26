@@ -39,6 +39,9 @@ public class MenuManager : MonoBehaviour
     public Button playButton;
     public Button kruznicaButton;
 
+
+   
+
     // Start is called before the first frame update
     void Start()
     {
@@ -109,13 +112,41 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Editor() {
-        menu.SetActive(false);
-        gameMenu.SetActive(false);
-        ePanel.SetActive(true);
-        gd.clear();
+
+        if (gd.mapa.Count < 1)
+        {
+            playPanel.SetActive(false);
+            menu.SetActive(false);
+            gameMenu.SetActive(false);
+            ePanel.SetActive(true);
+            gd.clear();
+
+
+        }
+        else
+        {
+            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+            {
+                playPanel.SetActive(false);
+                menu.SetActive(false);
+                gameMenu.SetActive(false);
+                ePanel.SetActive(true);
+                gd.clear();
+            }
+            else
+            {
+                
+            }
+        }
+
+        
+
+
     }
 
     public void Choose() {
+        gd.menuButton.interactable = false;
+        ePanel.SetActive(false);
         choosePanel.SetActive(true);
     }
 
@@ -123,6 +154,8 @@ public class MenuManager : MonoBehaviour
         if ((rowInput.text != "") & (columnInput.text != "")) {
             gd.NacitajEditor(int.Parse(rowInput.text), int.Parse(columnInput.text));
             choosePanel.SetActive(false);
+            ePanel.SetActive(true);
+            gd.menuButton.interactable = true;
         }
     }
 
@@ -133,6 +166,7 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Serie1() {
+
         gameMenu.GetComponent<Image>().color = c1;
         
         pickSerie.SetActive(false);
@@ -145,10 +179,12 @@ public class MenuManager : MonoBehaviour
         endMenu.GetComponent<Image>().color = c2;
 
         pickSerie.SetActive(false);
+
         NewGame(2);
     }
 
     public void SelectSerie() {
+
         if (!gd.saved)
         {
             if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
@@ -160,6 +196,19 @@ public class MenuManager : MonoBehaviour
         {
             pickSerie.SetActive(true);
         }
+
+        if (gd.mapa.Count > 0)
+        {
+            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+            {
+                pickSerie.SetActive(true);
+            }
+            else
+            {
+                pickSerie.SetActive(false);
+            }
+        }
+
     }
     public void NewGame(int sada)
     {
