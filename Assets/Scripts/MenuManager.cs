@@ -35,12 +35,20 @@ public class MenuManager : MonoBehaviour
     private bool editorKruznica = true;
     public GameObject playPanel;
 
+    public GameObject neulozenaPanel;
+    public GameObject neulozenaHraPanel;
+
+    public Button neulozenaPokracovatButton;
+    public Button neulozenaSpatButton;
+
+    public Button neulozenaHraPokracovatButton;
+    public Button neulozenaHraSpatButton;
+
+    public bool newGameBool = false;
+
     public Button stopPlayButton;
     public Button playButton;
     public Button kruznicaButton;
-
-
-   
 
     // Start is called before the first frame update
     void Start()
@@ -75,12 +83,99 @@ public class MenuManager : MonoBehaviour
         Button kruznicaBtn = kruznicaButton.GetComponent<Button>();
         kruznicaBtn.onClick.AddListener(KruznicaKlik);
 
+        Button neulozenaPokracovatBtn = neulozenaPokracovatButton.GetComponent<Button>();
+        neulozenaPokracovatBtn.onClick.AddListener(PB);
 
+        Button neulozenaSpatBtn = neulozenaSpatButton.GetComponent<Button>();
+        neulozenaSpatBtn.onClick.AddListener(SB);
+
+
+        Button neulozenaHraPokracovatBtn = neulozenaHraPokracovatButton.GetComponent<Button>();
+        neulozenaHraPokracovatBtn.onClick.AddListener(HraPokracovatButton);
+
+        Button neulozenaHraSpatBtn = neulozenaHraSpatButton.GetComponent<Button>();
+        neulozenaHraSpatBtn.onClick.AddListener(HraSpatButton);
+
+        
+
+
+
+    
         input.onSubmit.AddListener(saveGame);
         rowInput.onSubmit.AddListener(ChooseInput);
         columnInput.onSubmit.AddListener(ChooseInput);
 
 
+        }
+
+        
+
+    private void HraSpatButton()
+    {
+        neulozenaHraPanel.SetActive(false);
+
+    }
+
+    private void HraPokracovatButton()
+    {
+        if (newGameBool)
+        {
+            pickSerie.SetActive(true);
+            neulozenaHraPanel.SetActive(false);
+        }
+        else
+        {
+            playPanel.SetActive(false);
+            menu.SetActive(false);
+            gameMenu.SetActive(false);
+            ePanel.SetActive(true);
+            gd.clear();
+            neulozenaHraPanel.SetActive(false);
+        }
+        
+    }
+
+    private void SB()
+    {
+        pickSerie.SetActive(false);
+        neulozenaPanel.SetActive(false);
+    
+    }
+    
+    private void PB()
+    {
+        if (newGameBool)
+        {
+            pickSerie.SetActive(true);
+            neulozenaPanel.SetActive(false);
+        }
+        else
+        {
+            playPanel.SetActive(false);
+            menu.SetActive(false);
+            gameMenu.SetActive(false);
+            ePanel.SetActive(true);
+            gd.clear();
+            neulozenaPanel.SetActive(false);
+        }
+        
+    }
+
+    private void SpatButton()
+    {
+        neulozenaPanel.SetActive(false);
+        pickSerie.SetActive(false);
+
+    }
+
+    private void PokracovatButton()
+    {
+        playPanel.SetActive(false);
+        menu.SetActive(false);
+        gameMenu.SetActive(false);
+        ePanel.SetActive(true);
+        gd.clear();
+        neulozenaPanel.SetActive(false);
     }
 
     private void StopPlayKlik()
@@ -90,7 +185,7 @@ public class MenuManager : MonoBehaviour
 
     private void playKlik()
     {
-        playPanel.SetActive(true);   
+        playPanel.SetActive(true);
     }
 
     private void KruznicaKlik()
@@ -107,7 +202,8 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void Editor() {
+    public void Editor()
+    {
 
         if (gd.mapa.Count < 1)
         {
@@ -121,25 +217,18 @@ public class MenuManager : MonoBehaviour
         }
         else
         {
-            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+            if (gd.editorGame)
             {
-                playPanel.SetActive(false);
-                menu.SetActive(false);
-                gameMenu.SetActive(false);
-                ePanel.SetActive(true);
-                gd.clear();
+                neulozenaPanel.SetActive(true); 
             }
             else
             {
-                
-            }
+                neulozenaHraPanel.SetActive(true);
+            } 
+
         }
-
-        
-
-
+        newGameBool = false;
     }
-
     public void Choose() {
         gd.menuButton.interactable = false;
         ePanel.SetActive(false);
@@ -167,7 +256,9 @@ public class MenuManager : MonoBehaviour
     public void Serie1() {
 
         gameMenu.GetComponent<Image>().color = c1;
-        
+        gd.nemaRieseniePanel.GetComponent<Image>().color = c1;
+        gd.nemasPravduPanel.GetComponent<Image>().color = c1;
+
         pickSerie.SetActive(false);
         endMenu.GetComponent<Image>().color = c1;
         NewGame(1);
@@ -176,6 +267,8 @@ public class MenuManager : MonoBehaviour
     public void Serie2() {
         gameMenu.GetComponent<Image>().color = c2;
         endMenu.GetComponent<Image>().color = c2;
+        gd.nemaRieseniePanel.GetComponent<Image>().color = c2;
+        gd.nemasPravduPanel.GetComponent<Image>().color = c2;
 
         pickSerie.SetActive(false);
 
@@ -184,29 +277,37 @@ public class MenuManager : MonoBehaviour
 
     public void SelectSerie() {
 
-        if (!gd.saved)
-        {
-            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
-            {
-                pickSerie.SetActive(true);
-            }
-        }
-        else
+
+        /*   if (!gd.saved)
+           {
+               if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+               {
+                   pickSerie.SetActive(true);
+               }
+           }
+           else
+           {
+               pickSerie.SetActive(true);
+           }*/
+
+        if (gd.mapa.Count < 1)
         {
             pickSerie.SetActive(true);
         }
-
-        if (gd.mapa.Count > 0)
+        else
         {
-            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ mapu?", "ZahoÔiù", "Zruöiù"))
+            if (gd.editorGame)
             {
-                pickSerie.SetActive(true);
+                neulozenaPanel.SetActive(true);              
             }
             else
             {
-                pickSerie.SetActive(false);
+                neulozenaHraPanel.SetActive(true);
+               
             }
         }
+        newGameBool = true;
+
 
     }
     public void NewGame(int sada)
