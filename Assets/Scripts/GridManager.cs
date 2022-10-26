@@ -62,6 +62,8 @@ public class GridManager : MonoBehaviour
     public GameObject editorPanel;
     public bool pauza = false;
 
+    public GameObject drop;
+
 
 
     // Start is called before the first frame update
@@ -157,6 +159,17 @@ public class GridManager : MonoBehaviour
         else
         {
             EditorUtility.DisplayDialog("Nemáš pravdu", "Táto úloha má riešenie", "dobre...");
+        }
+    }
+
+    public void clearTiles() {
+        foreach (Tile t in _tiles.Values)
+        {
+            Destroy(t._Player);
+            Destroy(t._Tree);
+            Destroy(t._renderer);
+            Destroy(t._HighLight);
+            Destroy(t);
         }
     }
 
@@ -403,7 +416,6 @@ public class GridManager : MonoBehaviour
 
     void NacitajLevel()
     {
-
         var file = (TextAsset)Resources.Load(path + name);
         string[] strings = file.ToString().Split('\n');
 
@@ -466,7 +478,7 @@ public class GridManager : MonoBehaviour
         _height = i;
     }
 
-    void VytvorGrid()
+    public void VytvorGrid()
     {
         for (int x = 0; x < _width; x++)
         {
@@ -597,10 +609,8 @@ public class GridManager : MonoBehaviour
 
     void SelectAction(Tile target)
     {
+        if (pauza) { return; }
 
-        if (pauza) {
-            return;
-        }
         if (editorGame & editorTileChoosen != '0') {
             if (editorTileChoosen == 'z' & wizi) {
                 return;
@@ -690,6 +700,7 @@ public class GridManager : MonoBehaviour
             continueButton.gameObject.SetActive(true);
         }
         menu.gameObject.SetActive(true);
+        pauza = true;
     }
 
     public void Save(string name, bool kruznica)
@@ -713,11 +724,13 @@ public class GridManager : MonoBehaviour
         else
         {
             str += "CRT";
-        } 
-       
-        File.WriteAllText(Application.dataPath + "/Resources/Created/" + name + ".txt", str);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        }
+        string path = Application.persistentDataPath + "/"+ name + "txt";
+
+        StreamWriter writer = new StreamWriter(path, true);
+        writer.Write(str);
+        writer.Close();
+
 
         saved = true;
 
@@ -769,15 +782,28 @@ public class GridManager : MonoBehaviour
         name = spl[spl.Length - 1].Split('.')[0];
         _serie = 1;
         path = "Created/";
-        NacitajLevel();
-        VytvorGrid();
+        //NacitajLevel();
+        //VytvorGrid();
     }
 
     private string dialogWindow()
     {
+
+        DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath);
+        FileInfo[] fileInfo = directoryInfo.GetFiles("*.txt", SearchOption.AllDirectories);
+        drop.GetComponent<Dropdown>().options.Clear();
+        foreach (FileInfo file in fileInfo)
+        {
+            Dropdown.OptionData optionData = new Dropdown.OptionData(file.Name.Split('.')[0]);
+            drop.GetComponent<Dropdown>().options.Add(optionData);
+            drop.GetComponent<Dropdown>().value = 1;
+        }
+        return "";
+        /*
         var path = EditorUtility.OpenFilePanel("Vyber si level", Application.dataPath + "/Resources/", "txt");
         if (string.IsNullOrEmpty(path))
             return "";
         return path;
+        */
     }
 }

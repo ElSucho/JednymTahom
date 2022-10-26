@@ -39,8 +39,10 @@ public class MenuManager : MonoBehaviour
     public Button playButton;
     public Button kruznicaButton;
 
+    private List<List<char>> mapaCopy;
 
-   
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -86,11 +88,34 @@ public class MenuManager : MonoBehaviour
     private void StopPlayKlik()
     {
         playPanel.SetActive(false);
+        gd.editorGame = true;
+        gd.clear();
+        gd.mapa = copyList(mapaCopy);
+        gd.VytvorGrid();
+        gd.pauza = false;
     }
 
     private void playKlik()
     {
-        playPanel.SetActive(true);   
+        playPanel.SetActive(true);
+        gd.editorGame = false;
+        mapaCopy = copyList(gd.mapa);
+        gd.clearTiles();
+        gd.VytvorGrid();
+        gd.pauza = true;
+    }
+
+    private List<List<char>> copyList(List<List<char>> list) {
+        List<List<char>> ret = new List<List<char>>();
+
+        foreach (List<char> lch in list) {
+            var l = new List<char>();
+            foreach (char ch in lch) {
+                l.Add(ch);
+            }
+            ret.Add(l);
+        }
+        return ret;
     }
 
     private void KruznicaKlik()
@@ -116,7 +141,7 @@ public class MenuManager : MonoBehaviour
             gameMenu.SetActive(false);
             ePanel.SetActive(true);
             gd.clear();
-
+            gd.pauza = false;
 
         }
         else
@@ -128,6 +153,7 @@ public class MenuManager : MonoBehaviour
                 gameMenu.SetActive(false);
                 ePanel.SetActive(true);
                 gd.clear();
+                gd.pauza = false;
             }
             else
             {
@@ -154,6 +180,7 @@ public class MenuManager : MonoBehaviour
             gd.NacitajEditor(int.Parse(rowInput.text), int.Parse(columnInput.text));
             choosePanel.SetActive(false);
             ePanel.SetActive(true);
+            gd.pauza = false;
             gd.menuButton.interactable = true;
         }
     }
