@@ -33,7 +33,9 @@ public class MenuManager : MonoBehaviour
     public InputField columnInput;
     public GameObject endMenu;
     private bool editorKruznica = true;
+    public GameObject playPanel;
 
+    public Button stopPlayButton;
     public Button playButton;
     public Button kruznicaButton;
 
@@ -62,7 +64,10 @@ public class MenuManager : MonoBehaviour
         chooseB.onClick.AddListener(Choose);
 
         Button playBtn = playButton.GetComponent<Button>();
-        playBtn.onClick.AddListener(KruznicaKlik);
+        playBtn.onClick.AddListener(playKlik);
+
+        Button stopBtn = stopPlayButton.GetComponent<Button>();
+        stopBtn.onClick.AddListener(StopPlayKlik);
 
         Button kruznicaBtn = kruznicaButton.GetComponent<Button>();
         kruznicaBtn.onClick.AddListener(KruznicaKlik);
@@ -73,6 +78,20 @@ public class MenuManager : MonoBehaviour
         columnInput.onSubmit.AddListener(ChooseInput);
 
 
+    }
+
+    private void StopPlayKlik()
+    {
+        playPanel.SetActive(false);
+    }
+
+    private void playKlik()
+    {
+        
+        
+        playPanel.SetActive(true);
+        
+        
     }
 
     private void KruznicaKlik()
