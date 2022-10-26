@@ -192,14 +192,7 @@ public class MenuManager : MonoBehaviour
     {
         if (!gd.wizi) { return; }
         playPanel.SetActive(true);
-        playPanel.SetActive(true);
-        gd.editorGame = false;
-        mapaCopy = copyList(gd.mapa);
-        gd.clearTiles();
-        gd.VytvorGrid();
-        gd.pauza = true;
     }
-
 
     private List<List<char>> copyList(List<List<char>> list) {
         List<List<char>> ret = new List<List<char>>();
