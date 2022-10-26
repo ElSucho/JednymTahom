@@ -50,7 +50,7 @@ public class GridManager : MonoBehaviour
     public Button tileButton;
     public Button riesenieButton;
     private char editorTileChoosen = '0';
-    private bool wizi;
+    public bool wizi = false;
     private bool klik = true;
 
     public Button ukazRiesenieButton;
@@ -69,6 +69,7 @@ public class GridManager : MonoBehaviour
     public bool pauza = false;
 
     public GameObject drop;
+    public Button backPlayButton;
 
 
 
@@ -110,6 +111,9 @@ public class GridManager : MonoBehaviour
 
         Button dobreBtn2 = dobreButton2.GetComponent<Button>();
         dobreBtn2.onClick.AddListener(Dobre2);
+
+        Button backPlayBtn = backPlayButton.GetComponent<Button>();
+        backPlayBtn.onClick.AddListener(back);
 
 
         _tiles = new Dictionary<Vector2, Tile>();
@@ -253,6 +257,12 @@ public class GridManager : MonoBehaviour
                         {
                             actualTile._znak = '1';
                             mapa[_height - actualY - 1][actualX] = '1';
+                        }
+                        else {
+                            if (!kruznica) {
+                                actualTile._znak = '1';
+                                mapa[_height - actualY - 1][actualX] = '1';
+                            }
                         }
                         actualTile._Player.SetActive(false);
 

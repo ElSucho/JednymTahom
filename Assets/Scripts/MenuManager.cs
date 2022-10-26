@@ -190,6 +190,7 @@ public class MenuManager : MonoBehaviour
 
     private void playKlik()
     {
+        if (!gd.wizi) { return; }
         playPanel.SetActive(true);
         playPanel.SetActive(true);
         gd.editorGame = false;
@@ -361,6 +362,7 @@ public class MenuManager : MonoBehaviour
     public void SaveMenu() {
         if (gd.mapa.Count != 0 & gd.editorGame)
         {
+            if (!gd.wizi) { return; }
             saveName.SetActive(true);
         }
     }
