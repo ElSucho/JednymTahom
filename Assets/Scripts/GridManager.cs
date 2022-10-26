@@ -461,6 +461,7 @@ public class GridManager : MonoBehaviour
     
         _height += row;
         _width += column;
+        _cam.transform.position = new Vector3((float)_width / 2, (float)_height / 2 - 0.2F, -10); 
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
