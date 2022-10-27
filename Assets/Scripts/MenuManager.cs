@@ -50,6 +50,9 @@ public class MenuManager : MonoBehaviour
     public Button playButton;
     public Button kruznicaButton;
 
+    public GameObject loadPanel;
+    public Button potvrditButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -96,11 +99,9 @@ public class MenuManager : MonoBehaviour
         Button neulozenaHraSpatBtn = neulozenaHraSpatButton.GetComponent<Button>();
         neulozenaHraSpatBtn.onClick.AddListener(HraSpatButton);
 
-        
+        Button potvrditBtn = potvrditButton.GetComponent<Button>();
+        potvrditBtn.onClick.AddListener(LoadGo);
 
-
-
-    
         input.onSubmit.AddListener(saveGame);
         rowInput.onSubmit.AddListener(ChooseInput);
         columnInput.onSubmit.AddListener(ChooseInput);
@@ -182,6 +183,7 @@ public class MenuManager : MonoBehaviour
     {
         playPanel.SetActive(false);
         gd.editorGame = true;
+        ePanel.SetActive(true);
         gd.clear();
         gd.mapa = copyList(mapaCopy);
         gd.VytvorGrid();
@@ -192,6 +194,11 @@ public class MenuManager : MonoBehaviour
     {
         if (!gd.wizi) { return; }
         playPanel.SetActive(true);
+        gd.editorGame = false;
+        mapaCopy = copyList(gd.mapa);
+        gd.clearTiles();
+        gd.VytvorGrid();
+        gd.pauza = true;
     }
 
     private List<List<char>> copyList(List<List<char>> list) {
@@ -231,6 +238,7 @@ public class MenuManager : MonoBehaviour
             gameMenu.SetActive(false);
             ePanel.SetActive(true);
             gd.clear();
+            gd.wizi = false;
             gd.pauza = false;
 
         }
@@ -332,15 +340,8 @@ public class MenuManager : MonoBehaviour
     }
     public void NewGame(int sada)
     {
-        if (!gd.saved)
+        if (gd.saved)
         {
-            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ hru?", "ZahoÔiù", "Zruöiù"))
-            {
-                menu.gameObject.SetActive(false);
-                gd.NewGame(sada);
-            }
-        }
-        else {
             menu.gameObject.SetActive(false);
             gd.NewGame(sada);
         }
@@ -361,19 +362,21 @@ public class MenuManager : MonoBehaviour
     }
 
     public void Load() {
-        if (!gd.saved)
-        {
-            if (EditorUtility.DisplayDialog("Neuloûen· hra", "Naozaj chcete zahodiù neuloûen˙ hru?", "ZahoÔiù", "Zruöiù"))
-            {
-                menu.gameObject.SetActive(false);
-                gd.loadSave();
-            }
-        }
-        else {
-            menu.gameObject.SetActive(false);
-            gd.loadSave();
-        }
+        
+            loadPanel.SetActive(true);
+            gd.dialogWindow();
     }
+
+    private void LoadGo() {
+        menu.gameObject.SetActive(false);
+        loadPanel.SetActive(false);
+        gd.loadSave();
+        mapaCopy = copyList(gd.mapa);
+        playPanel.SetActive(true);
+        gd.editorGame = false;
+
+    }
+
     public void saveGame(string text) {
         if (gd.mapa.Count != 0)
         {

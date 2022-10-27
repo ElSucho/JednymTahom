@@ -68,7 +68,7 @@ public class GridManager : MonoBehaviour
 
     public bool pauza = false;
 
-    public GameObject drop;
+    public Dropdown drop;
     public Button backPlayButton;
 
 
@@ -311,8 +311,15 @@ public class GridManager : MonoBehaviour
                             actualTile._znak = '1';
                             mapa[_height - actualY - 1][actualX] = '1';
                         }
+                        else
+                        {
+                            if (!kruznica)
+                            {
+                                actualTile._znak = '1';
+                                mapa[_height - actualY - 1][actualX] = '1';
+                            }
+                        }
                         actualTile._Player.SetActive(false);
-
                         var oldTile = actualTile;
 
                         actualTile = GetTileAtPosition(new Vector2(actualX, actualY - 1));
@@ -358,8 +365,16 @@ public class GridManager : MonoBehaviour
                             actualTile._znak = '1';
                             mapa[_height - actualY - 1][actualX] = '1';
                         }
+                        else
+                        {
+                            if (!kruznica)
+                            {
+                                actualTile._znak = '1';
+                                mapa[_height - actualY - 1][actualX] = '1';
+                            }
+                        }
                         actualTile._Player.SetActive(false);
-
+                        
                         var oldTile = actualTile;
 
                         actualTile = GetTileAtPosition(new Vector2(actualX, actualY + 1));
@@ -403,8 +418,16 @@ public class GridManager : MonoBehaviour
                             actualTile._znak = '1';
                             mapa[_height - actualY - 1][actualX] = '1';
                         }
+                        else
+                        {
+                            if (!kruznica)
+                            {
+                                actualTile._znak = '1';
+                                mapa[_height - actualY - 1][actualX] = '1';
+                            }
+                        }
                         actualTile._Player.SetActive(false);
-
+                        
                         var oldTile = actualTile;
 
                         actualTile = GetTileAtPosition(new Vector2(actualX - 1, actualY));
@@ -529,6 +552,7 @@ public class GridManager : MonoBehaviour
                     actualX = x;
                     actualY = y;
                     actualTile = tile;
+                    wizi = true;
                 }
 
                 tile.Init(isOffset, x, y, mapa[_height - y - 1][x], _serie);
@@ -570,6 +594,7 @@ public class GridManager : MonoBehaviour
         }
         if (mapa.Count == 0)
         {
+            wizi = false;
             editorGame = true;
             _width = column;
             _height = row;
@@ -758,12 +783,11 @@ public class GridManager : MonoBehaviour
         {
             str += "CRT";
         }
-        string path = Application.persistentDataPath + "/"+ name + "txt";
+        string path = Application.persistentDataPath + "/"+ name + ".txt";
 
         StreamWriter writer = new StreamWriter(path, true);
         writer.Write(str);
         writer.Close();
-
 
         saved = true;
 
@@ -810,28 +834,77 @@ public class GridManager : MonoBehaviour
     public void loadSave()
     {
         clear();
-        string fileName = dialogWindow();
-        var spl = fileName.Split('/');
-        name = spl[spl.Length - 1].Split('.')[0];
+        var name = drop.options[drop.value].text;
         _serie = 1;
-        path = "Created/";
-        //NacitajLevel();
-        //VytvorGrid();
+        nacitajLoad(name);
+        VytvorGrid();
+        
     }
 
-    private string dialogWindow()
+    private void nacitajLoad(string name) {
+        string path = Application.persistentDataPath + "/" + name + ".txt";
+        StreamReader reader = new StreamReader(path);
+
+        string[] strings = reader.ReadToEnd().Split('\n');
+
+        int i = 0;
+        int j = 0;
+
+        if (strings[strings.Length - 1][0] == 'D')
+        {
+            if (strings[strings.Length - 1][1] == 'R')
+            {
+                solve = true;
+                if (strings[strings.Length - 1][2] == 'K')
+                {
+                    levelType.text = "Kruûnica";
+                    kruznica = true;
+                }
+                else
+                {
+                    kruznica = false;
+                    levelType.text = "çah";
+                }
+            }
+            else
+            {
+                solve = false;
+            }
+        }
+
+        strings = strings.Take(strings.Length - 1).ToArray();
+
+        foreach (string s in strings)
+        {
+            if (s != "")
+            {
+                j = 0;
+                mapa.Add(new List<char>());
+                var str = s.Replace("\n", "").Replace("\r", "");
+                foreach (char ch in str)
+                {
+                    mapa[i].Add(ch);
+                    j += 1;
+                }
+                i += 1;
+            }
+        }
+        _width = j;
+        _height = i;
+    }
+
+    public void dialogWindow()
     {
 
         DirectoryInfo directoryInfo = new DirectoryInfo(Application.persistentDataPath);
         FileInfo[] fileInfo = directoryInfo.GetFiles("*.txt", SearchOption.AllDirectories);
-        drop.GetComponent<Dropdown>().options.Clear();
+        drop.options.Clear();
         foreach (FileInfo file in fileInfo)
         {
             Dropdown.OptionData optionData = new Dropdown.OptionData(file.Name.Split('.')[0]);
-            drop.GetComponent<Dropdown>().options.Add(optionData);
-            drop.GetComponent<Dropdown>().value = 1;
+            drop.options.Add(optionData);
+            drop.value = 1;
         }
-        return "";
         /*
         var path = EditorUtility.OpenFilePanel("Vyber si level", Application.dataPath + "/Resources/", "txt");
         if (string.IsNullOrEmpty(path))

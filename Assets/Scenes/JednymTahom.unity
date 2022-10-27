@@ -1072,6 +1072,8 @@ MonoBehaviour:
   stopPlayButton: {fileID: 692004367}
   playButton: {fileID: 1749677073}
   kruznicaButton: {fileID: 2042472021}
+  loadPanel: {fileID: 1856613891}
+  potvrditButton: {fileID: 1185858784}
 --- !u!4 &161079330
 Transform:
   m_ObjectHideFlags: 0
@@ -4201,6 +4203,7 @@ MonoBehaviour:
   playerButton: {fileID: 2036276906}
   tileButton: {fileID: 646401842}
   riesenieButton: {fileID: 2103045803}
+  wizi: 0
   ukazRiesenieButton: {fileID: 1939031661}
   sada1level1: {fileID: 1019189272}
   sada1level2: {fileID: 1779785129}
@@ -4212,7 +4215,8 @@ MonoBehaviour:
   dobreButton: {fileID: 721663448}
   dobreButton2: {fileID: 42823323}
   pauza: 0
-  drop: {fileID: 0}
+  drop: {fileID: 1864046821}
+  backPlayButton: {fileID: 737934188}
 --- !u!222 &953992395
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8931,7 +8935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1856613892
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8951,7 +8955,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.940094, y: -3.9274902}
+  m_AnchoredPosition: {x: 0.9400635, y: -3.9274902}
   m_SizeDelta: {x: -401.88, y: -192.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1856613893
